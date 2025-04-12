@@ -1,0 +1,164 @@
+{% extends "user/user_template.html" %}
+
+
+{% block content %}
+
+
+     <!-- Navigation Bars, banner/hero section  starts here-->
+
+    <div class="row main-banner">  
+        {% include "user/navigation.html" %}
+       
+        <div class="col banner-content parent" id="container">
+            <h1 id="name">Beulah</h1>
+            <h1 id="extention">Foundation for Christ</h1>
+            <p id="motto">Beulah... and your land will be married. Isaiah 62:4</p>
+        </div>
+
+    </div>
+    
+    <!-- Navigation Bars, banner/hero section  ends here-->
+
+    
+    <!-- Welcome to the family message starts here -->
+
+    <div class="row welcome-message-container parent">
+
+        <div class="col-md-6 family-img" data-aos="fade-right">
+            <img src="{{url_for('static', filename='images/worship.jpg')}}" 
+                alt="Group Picture of some members of beulah foundation" 
+                class="first-image" loading="lazy">
+            <img src="{{url_for('static', filename='images/study.jpg')}}" 
+                alt="Some members of beulah foundation" 
+                class="second-image" loading="lazy">
+        </div>
+
+        <div class="col-md-6 welcome-message" data-aos="fade-left">
+            <h1 class="animate__animated" id="welcome-heading">Welcome to Beulah Foundation for Christ. </h1>
+            <p>We are pleased to have you and we pray that you will be greatly blessed as you go through our spiritual resources. Beulah Foundation for Christ is a non-denominational fellowship with members drawn from all works of life bearing the torch of Christ in relationships, marriage, the work place and every facet of life in this generation to the glory of our Lord and Savior Jesus Christ. We look forward to interacting with you. Do take a walk with us and we look forward to hearing from you soon.
+            </p>
+            <p><strong>God bless you.</strong></p>
+        </div>
+        
+    </div>
+
+    <!-- Welcome to the family message ends here -->
+
+
+    <!-- carousel sliding starts here -->
+
+    {% if slides %}
+
+    <div class="row slides-parent parent" data-aos="fade-up">
+
+        <div class="col-12">
+
+        <div id="messageSlides" class="carousel slide messages-slides" data-bs-ride="carousel">
+            
+
+            <div class="carousel-inner">
+            {% for resource, slide in slides %}
+            {% set slide_url = url_for('static', filename=slide.slide_image) %}
+            <div class="carousel-item {% if loop.index == 1 %}active{% endif %}"
+                style="background-image: url('{{ slide_url }}');"
+            >
+                <div class="carousel-text">
+                <h1>{{resource.resource_title}}</h1>
+                <p class="carousel-preview">
+                    {{ resource.resource_body[0:150] | safe}}...
+                </p>
+                <a href="{{url_for('dynamic_slides', id=resource.resource_id)}}" class="read-more-link">Continue Reading</a>
+                </div>
+
+            </div>
+
+            {% endfor %}
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#messageSlides" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#messageSlides" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+            </button>
+
+        </div>
+
+        </div>
+    
+    </div>
+
+    {% endif %}
+    <!-- carousel sliding ends here -->
+
+
+
+    
+    <!-- social media icons starts here -->
+    <div class="row social-media-container parent" data-aos="fade-up">
+        <div class="col-12">
+          <div class="content">
+            <h3>Stay in the loop. Follow us on social media and dive into our awesome blogs!</h3>
+            <div>
+              <a href="https://www.facebook.com/BeulahFoundationforChrist" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+              <a href="https://www.youtube.com/@beulahfoundationforchrist5834" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+              <a href="https://beulahfoundationforchrist.blogspot.com/" target="_blank"><i class="fa-brands fa-blogger"></i></a>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- social media icons ends here -->
+
+
+
+{% endblock content %}
+{% block script%}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let hasAnimated = false; // Flag to track if animation has run
+
+    function reanimate() {
+        setTimeout(() => {
+            const name = document.getElementById('name');
+            name.classList.add('custom-fade-in-down');
+            name.style.visibility = 'visible';
+        }, 100);
+        setTimeout(() => {
+            const extention = document.getElementById('extention');
+            extention.classList.add('custom-fade-in-up');
+            extention.style.visibility = 'visible';
+        }, 1200);
+        setTimeout(() => {
+            const motto = document.getElementById('motto');
+            motto.classList.add('custom-zoom-in');
+            motto.style.visibility = 'visible';
+        }, 2400);
+    }
+
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const container = document.getElementById('container');
+                if (entry.isIntersecting && !hasAnimated) {
+                    container.style.visibility = 'visible';
+                    reanimate();
+                    hasAnimated = true; // Prevent future animations
+                }
+            });
+        }, { threshold: 0.3 });
+
+        observer.observe(document.getElementById('container'));
+    } else {
+        // Fallback: run once immediately
+        reanimate();
+        hasAnimated = true;
+    }
+
+})
+ 
+  
+</script>
+{% endblock script %}

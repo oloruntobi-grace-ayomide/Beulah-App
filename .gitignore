@@ -1,0 +1,30 @@
+# Python Cache files
+__pycache__/
+*.pyc
+*.py[cod]
+
+# Virtual Environment directories
+vbeulah/
+venv/
+
+# Environment variable files
+env/
+.env
+
+
+# Database files
+*.db
+*.sql
+
+# Log files
+*.log
+
+# Instance folder (contains temporary files, local configurations)
+instance/
+
+# Sensitive configuration file (if it contains secrets)
+config.py
+
+# Migrations folder (Only ignore if you don’t want to track them)
+migrations
+migrations/

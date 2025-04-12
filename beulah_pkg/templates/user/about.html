@@ -1,0 +1,39 @@
+{% extends "user/user_template.html" %}
+
+{% block title %}About - Beulah Foundation for Christ{% endblock %}
+{% block content %}
+
+    <div class="row">
+
+        {% include "user/navigation.html" %}
+
+
+        <div class="col-12 pages-banner">
+            <div class="banner-heading">
+                <h1>About us</h1>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="row about-page-content parent">
+        <div class="col-12 col-md-6  pastors_img_div" data-aos="fade-right">
+            <img src="{{url_for('static', filename='images/mom_dad.jpg')}}" 
+            alt="pastors incharge of ministry picture" loading="lazy">
+        </div>
+        <div class="col-12 col-md-6  about-ministry-content" data-aos="fade-left">
+            <p>Beulah Foundation for Christ is not an established Church but a work and a part of the Body of Christ.</p>
+            <p>It is a Ministry geared towards preparing the man totally for the Coming of Jesus Christ our Lord and Savior.</p>
+            <p>It is a Ministry created and founded by God to disciple men in order for them to truly showcase His attitude and character in every facet of their lives.</p>
+            <p>This preparation entails evangelism and discipling as contained in Matthew 28:18-20.</p>
+            <p>The mandate of the Ministry is derived from Isaiah 62 verse 4.</p>
+            <p>The Ministry is therefore positioned to be a resource in all areas of discipline for the growth of the Body of Christ and the well being of the Society.</p>
+
+            <p class="special">That's just a glimpse of who we are! Join us to discover the full story and become part of our joyful family in Christ. We can't wait to welcome you!</p>
+        </div>
+
+    </div>
+
+{% endblock content %}

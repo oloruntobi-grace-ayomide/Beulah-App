@@ -1,0 +1,94 @@
+{% extends "user/user_template.html" %}
+
+{% block title %}Upcoming Events - Beulah Foundation for Christ{% endblock %}
+
+
+{% block content %}
+
+<div class="row">
+
+    {% include "user/navigation.html" %}
+
+    <div class="col-12 pages-banner">
+        <div class="banner-heading">
+            <h1>Upcoming Events</h1>
+    </div>
+    </div>
+    
+  
+</div>
+
+
+
+
+
+<div class="row upcoming-page-content">
+   
+    {% if events %}
+        {% for event in events %}
+        
+        
+        <div class="col-lg-4 col-md-6 col-sm-12 upcoming-events-cards" data-aos="fade-up">
+            <div class="card">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div>
+                            <h3>{{event.event_theme}}</h3>
+                            <p><i class="fa-regular fa-calendar-days"></i> {{ event.formatted_date }}</p>
+                            <p><i class="fa-regular fa-clock"></i> {{event.event_time.strftime('%I:%M%p').lstrip('0').lower()}} prompt</p>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <div>
+                            {% if event.event_venue %}
+                            <p><i class="fa-solid fa-location-dot"></i> {{event.event_venue}}</p>
+                            {%endif%}
+                            <p>{{event.event_description}}</p>  
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+        {% endfor%}
+    {% else %}
+
+        <div class="col-lg-4 col-md-6 col-sm-12 upcoming-events-cards" data-aos="fade-up">
+            <div class="card">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div>
+                            <h3>No Upcoming Events</h3>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <div>
+                            <p>Thank you</p>  
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    {% endif %}
+    
+
+    <div class="col-12 prayers mt-5">
+        <p>God bless you as you plan and pray toward these meetings.</p>
+        <p>Jesus Christ is LORD</p>
+    </div>
+
+</div>
+
+
+
+
+
+{% endblock content %}
+
+
+
+

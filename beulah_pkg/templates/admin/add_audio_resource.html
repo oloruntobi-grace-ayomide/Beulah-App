@@ -1,0 +1,120 @@
+{% extends 'admin/admin_template.html '%}
+
+{% block title %}Add New Audio Resource - Beulah Foundation for Christ{% endblock title %}
+
+
+{% block content %}
+
+    
+<div class="row editor-container">
+
+    <div class="col-12 card-style">
+   
+        <h2>Add New Audio Resource</h2>
+        <form id="resourceForm" method="POST" action="{{ url_for('add_audio_resource') }}" >
+       
+    
+            <div class="input-style-1">
+                <label>Title</label>
+                <input type="text" placeholder="Title" id="title"/>
+            </div>
+        
+    
+            <div class="input-style-1">
+                <label>Audio URL</label>
+                <input type="url" id="audio_url" name="audio_url" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+    
+          <!-- Submit Button -->
+            <div class="links-buttons">
+            <button type="submit" class="butt-2 me-3">Upload</button>
+            <a href="{{url_for('admin_audio_resources')}}" class="link-2">Close</a>
+            </div>
+
+        </form>
+    
+      </div>
+
+</div>  
+
+   
+
+{% endblock content %}
+
+{% block script %}
+<script>
+
+window.addEventListener('DOMContentLoaded', function(){
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+
+    document.getElementById('resourceForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+        // Get data
+        const title = document.getElementById('title').value;
+        const audioUrl = document.getElementById('audio_url').value;
+
+
+        if (!title.trim() || !audioUrl.trim()) {
+          alertError('Error','Please fill out title and url fields.');
+          return;
+      }
+
+
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('audio_url', audioUrl);
+
+
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+            Swal.fire({
+            title: 'Successful',
+            text: 'Audio Resource uploaded successfully!',
+            icon: 'success',
+            customClass: {
+            title: 'my-swal-title',
+            confirmButton: 'my-swal-confirm-btn',
+            }
+            }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = data.redirect_url;
+            }
+            });
+            } else {
+            alertError('Error', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alertError('Error', 'An unexpected error occurred. Please try again.');
+            });
+        
+    });
+
+
+})
+</script>
+    
+{% endblock script %}
+                           
+
+
+
+
+
+
+       
+   
+    
+ 
+      

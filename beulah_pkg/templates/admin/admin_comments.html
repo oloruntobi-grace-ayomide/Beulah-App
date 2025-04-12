@@ -1,0 +1,371 @@
+{% extends 'admin/admin_template.html '%}
+
+{% block title %}Comments - Beulah Foundation for Christ{% endblock title %}
+
+
+{% block content %}
+
+    
+    <div class="row filter-parent-container">
+        <div class="col-12 filter-container">
+
+
+            <div class="filter-section">
+
+                <div class="select-style-1">
+                        
+                    <div class="select-position">
+                        <select class="form-select months" name="month">
+                            <option value="all" {% if request.args.get('month') == 'all' %}selected{% endif %}>All Months</option>
+                            <option value="1" {% if request.args.get('month') == '1' %}selected{% endif %}>January</option>
+                            <option value="2" {% if request.args.get('month') == '2' %}selected{% endif %}>February</option>
+                            <option value="3" {% if request.args.get('month') == '3' %}selected{% endif %}>March</option>
+                            <option value="4" {% if request.args.get('month') == '4' %}selected{% endif %}>April</option>
+                            <option value="5" {% if request.args.get('month') == '5' %}selected{% endif %}>May</option>
+                            <option value="6" {% if request.args.get('month') == '6' %}selected{% endif %}>June</option>
+                            <option value="7" {% if request.args.get('month') == '7' %}selected{% endif %}>July</option>
+                            <option value="8" {% if request.args.get('month') == '8' %}selected{% endif %}>August</option>
+                            <option value="9" {% if request.args.get('month') == '9' %}selected{% endif %}>September</option>
+                            <option value="10" {% if request.args.get('month') == '10' %}selected{% endif %}>October</option>
+                            <option value="11" {% if request.args.get('month') == '11' %}selected{% endif %}>November</option>
+                            <option value="12" {% if request.args.get('month') == '12' %}selected{% endif %}>December</option>
+                        </select>
+                        
+                    </div>
+                </div>
+                
+            
+                <div class="select-style-1">
+                    
+                    <div class="select-position">
+                        <select class="form-select sort-order" name="sortOrder">
+                            <option value="desc" {{ get_selected_option('desc') }}>Desc</option>
+                            <option value="asc" {{ get_selected_option('asc') }}>Asc</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="filter-comments" class="butt-1">Filter</button>
+            
+            </div>
+
+
+            <div class="pagination-container">
+
+                <!-- Pagination Controls -->
+                
+                <nav aria-label="...">
+                    <ul class="pagination">
+                    {% if pagination%}
+                    {% if pagination.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ base_url }}?page={{ pagination.prev_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}"><i class="fa-solid fa-angle-left"></i></a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fa-solid fa-angle-left"></i></span>
+                        </li>
+                    {% endif %}
+                    {%endif%}
+
+                    
+
+                    {% if pagination %}
+                        {% for page_num in pagination.iter_pages(left_edge=0, right_edge=0, left_current=0, right_current=0) %}
+                        
+                        {% if page_num %}
+                            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                <a class="page-link" href="{{ base_url }}?page={{ page_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+
+                        {% endfor %}
+                    {% endif%}
+
+
+
+                    {% if pagination %}
+                    {% if pagination.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ base_url }}?page={{ pagination.next_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}"><i class="fa-solid fa-angle-right"></i></a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fa-solid fa-angle-right"></i></span>
+                        </li>
+                    {% endif %}
+                    {% endif %}
+                    </ul>
+                </nav>
+
+            </div>
+
+        </div>
+
+    </div>
+   
+      
+    <div class="row">
+        <div class="col-12 table-wrapper">
+
+            <table class="table">
+
+                <thead>
+                    <tr>
+                    <th class="loop-num">
+                        <h5>
+                            #
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>Comment for</h5>
+                    </th>
+                    
+                    <th>
+                        <h5>Comments</h5>
+                    </th>
+
+                    <th>
+                        <h5>For</h5>
+                    </th>
+
+                    <th>
+                        <h5>Date</h5>
+                    </th>
+
+                    <th>
+                        <h5>View</h5>
+                    </th>
+
+                    <th>
+                        <h5>Delete</h5>
+                    </th>
+
+                    </tr>
+                    
+                </thead>
+
+                <tbody>
+                    {% if comments %}
+                        {% for comment, resource in comments %}
+                            <tr id="comment-{{comment.comment_id}}"
+                            data-name="{{comment.comment_by}}"
+                            data-content="{{comment.comment_body}}">
+
+                            <td class="loop-num">
+                                <p>{{ (pagination.page - 1) * pagination.per_page + loop.index }}</p>
+                            </td>
+
+                            <td class="min-width special-td">
+                                <p>
+                                    {% if comment.comment_by|length > 20 %}
+                                    {{ comment.comment_by[0:20] }}...
+                                    {% else %}
+                                        {{ comment.comment_by }}
+                                    {% endif %}
+                                </p>
+                            </td>
+
+                            <td class="min-width">
+                                <p>
+                                    {% if comment.comment_body|length > 17 %}
+                                        {{ comment.comment_body[0:17] }}...
+                                    {% else %}
+                                        {{ comment.comment_body }}
+                                    {% endif %}
+                                </p>
+                            </td>
+
+                            <td class="min-width special-td">
+                                <p>{{ resource.resource_type}}</p>
+                            </td>
+
+                            <td class="min-width">
+                                <p class="convert-time" data-utc="{{ comment.comment_date.isoformat() }}Z"></p>
+                            </td>
+
+                            <td class="view-action">
+                                <p class="pointer view-comment-btn"  data-id="{{comment.comment_id}}"><i class="fa-regular fa-eye"></i>View</p>
+                            </td>
+
+                            <td class="action">
+                                <p class="pointer delete-comment-btn" data-id="{{comment.comment_id}}"> <i class="fa-regular fa-trash-can"></i></p>
+                            </td>
+                            </tr>
+                        {% endfor %}
+                    {%else%}
+                    <tr>
+                        <td colspan="7" class="text-center"><p>No Comment Found</p></td>
+                    </tr>
+                    {% endif %}
+                
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+
+    <div class="row rendering-row" id="rendering-row">
+        <div class="col rendering-modal ">
+            <div class="card-style-2" tabindex="0">
+
+                <div class="card-image">
+                    <img src="{{url_for('static', filename='images/comment.png')}}" alt="praying hands" loading="lazy" />
+                </div>
+
+                <div class="card-content">
+                    <h3 id="pr-name"></h3>
+                    <p class="mt-4" id="pr-content"></p>
+                    <div class="mt-5">
+                        <button id="closing-button" class="butt-2">close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.3/luxon.min.js"></script>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const baseUrl = "{{ base_url }}";
+
+
+    document.querySelectorAll(".convert-time").forEach(el => {
+        const utcString = el.getAttribute("data-utc");
+        const localTime = luxon.DateTime.fromISO(utcString, { zone: "utc" }) // Parse as UTC
+        .setZone(luxon.DateTime.local().zoneName) // Convert to user’s timezone
+        .toFormat("dd-MMM-yyyy hh:mm a"); // Format output
+
+        el.textContent = localTime;
+    });
+
+
+
+    document.querySelectorAll('.delete-comment-btn').forEach(button => {
+        button.addEventListener('click', function () {
+
+            const commentId = this.dataset.id;
+
+            // Confirm action
+            confirmDelete('Are you sure you want to delete this comment?')
+            .then(confirmed => {
+                if (!confirmed) {
+                    return;
+                }
+
+                fetch('{{url_for("admin_delete_comment")}}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ id: commentId  })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alertSuccess2('Successful',data.message);
+                        const row = document.getElementById(`comment-${commentId}`);
+                        if (row) {
+                            row.remove();
+                        }
+                    } else {
+                        alertError('Error', data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            })
+ 
+        });
+    });
+
+
+    const modalParent = document.getElementById('rendering-row')
+    const renderingModal = document.querySelector('.rendering-modal .card-style-2')
+    const closeBtn = document.getElementById("closing-button")
+
+    document.querySelectorAll('.view-comment-btn').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.stopPropagation();
+            const commentId = this.dataset.id;
+            const row = document.getElementById(`comment-${commentId}`);
+            if (!row) {
+            return;
+            }
+            // Extract details using data attributes
+            const prName = row.dataset.name;
+            const prContent = row.dataset.content;
+           
+
+            // Populate the modal content using direct ID selectors
+            renderingModal.querySelector('#pr-name').textContent = prName;
+            renderingModal.querySelector('#pr-content').textContent = prContent;
+            
+            // Show modal and set focus for accessibility
+            modalParent.classList.add('show');
+            renderingModal.focus(); 
+                    
+        });
+    });
+
+    
+    // Close modal on close button click
+    closeBtn.addEventListener('click', function(event) {
+        event.stopPropagation();
+        modalParent.classList.remove('show');
+    });
+
+    // Close modal when clicking outside the modal content
+    modalParent.addEventListener('click', (e) => {
+        if (!renderingModal.contains(e.target)) {
+            modalParent.classList.remove('show');
+        }
+    });
+
+
+    // Allow closing modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && modalParent.classList.contains('show')) {
+            modalParent.classList.remove('show');
+        }
+    });
+
+
+
+    document.getElementById('filter-comments').addEventListener('click', function () {
+    
+        const sortOrder = document.querySelector('select[name="sortOrder"]').value;
+        const month = document.querySelector('select[name="month"]').value;
+    
+        const url = `${baseUrl}?page=1&sortOrder=${sortOrder}&month=${month}`;
+        window.location.href = url;
+    
+    });
+    
+    
+    })
+
+</script>
+    
+{% endblock script %}
+                           
+
+
+
+
+
+
+       
+   
+    
+ 
+      

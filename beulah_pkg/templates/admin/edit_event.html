@@ -1,0 +1,157 @@
+{% extends 'admin/admin_template.html '%}
+
+{% block title %}Edit Event - Beulah Foundation for Christ{% endblock title %}
+
+
+{% block content %}
+
+    
+<div class="row editor-container">
+
+    <div class="col-12 card-style">
+        <h2>Edit Event</h2>
+        {% if event %}
+            <form id="eventForm" method="POST" action="{{ url_for('edit_event', id=event.event_id) }}" >
+        
+                <div class="input-style-1">
+                    <label for="theme">Theme</label>
+                    <input type="text" name="theme" placeholder="Theme" value="{{event.event_theme}}" required />
+                </div>
+
+                <div class="input-style-1">
+                    <label for="date">Date</label>
+                    <input type="date" name="event_date" value="{{ event.event_date}}" required />
+                </div>
+
+                <div class="input-style-1">
+                    <label for="time">Time</label>
+                    <input type="time" name="event_time" value="{{ event.event_time }}" required />
+                </div>
+
+                <div class="input-style-1">
+                    <label for="venue">Venue</label>
+                    <input type="text" placeholder="Venue" name="event_venue" value="{{event.event_venue}}"/>
+                </div>
+
+                <div class="input-style-1">
+                    <label for="prayer">Prayer / Words of Encourage</label>
+                    <textarea placeholder="Prayer / Encourage" rows="2" name="prayer">
+                        {{ event.event_description }}
+                    </textarea>
+                </div>
+        
+                <!-- Submit Button -->
+                <div class="links-buttons">
+                <button type="submit" class="butt-2 me-3">Upload</button>
+                <a href="{{url_for('admin_upcoming_events')}}" class="link-2">Close</a>
+                </div>
+
+            </form>
+        {% else %}
+            <p class="text-center">Event not found</p>
+        {% endif%}
+    </div>
+
+</div>  
+
+   
+
+{% endblock content %}
+
+{% block script %}
+<script>
+
+window.addEventListener('DOMContentLoaded', function(){
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+
+    document.getElementById('eventForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Get data
+        const theme = document.querySelector("input[name='theme']").value.trim();
+        const eventDate = document.querySelector("input[name='event_date']").value.trim();
+        const eventTime = document.querySelector("input[name='event_time']").value.trim();
+        const eventVenue = document.querySelector("input[name='event_venue']").value.trim();
+        const prayer = document.querySelector("textarea[name='prayer']").value.trim();
+
+
+        if (!theme || !eventDate || !eventTime) {
+              alertError('Error','Theme, Date, and Time are required fields!');
+              return;
+        }
+
+       
+        let formattedDate =eventDate
+        if (eventDate) {
+            formattedDate = new Date(formattedDate).toISOString().split('T')[0];
+        }
+
+        let formattedTime = eventTime;
+        if (eventTime) {
+            const [hours, minutes] = eventTime.split(':');
+            const hoursInt = parseInt(hours, 10);
+            const period = hoursInt >= 12 ? 'PM' : 'AM';
+            const formattedHours = hoursInt % 12 || 12;
+            formattedTime = `${formattedHours}:${minutes} ${period}`;
+        }      
+
+        const formData = new FormData();
+        formData.append('theme', theme);
+        formData.append('event_date', formattedDate);
+        formData.append('event_time', formattedTime);
+        formData.append('event_venue', eventVenue);
+        formData.append('prayer', prayer);
+
+
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+            Swal.fire({
+            title: 'Successful',
+            text: 'Event updated successfully!',
+            icon: 'success',
+            customClass: {
+            title: 'my-swal-title',
+            confirmButton: 'my-swal-confirm-btn',
+            }
+            }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = data.redirect_url;
+            }
+            });
+            } else {
+            alertError('Error', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alertError('Error', 'An unexpected error occurred. Please try again.');
+            });
+        
+    });
+
+
+})
+</script>
+    
+{% endblock script %}
+                           
+
+
+
+
+
+
+       
+   
+    
+ 
+      

@@ -1,0 +1,131 @@
+{% extends "user/user_template.html" %}
+
+{% block title %}Prayer Request - Beulah Foundation for Christ{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+
+      {% include "user/navigation.html" %}
+
+      <div class="col-12 pages-banner">
+          <div class="banner-heading">
+              <h1>Prayer Request</h1>
+      </div>
+      </div>
+    
+  </div>
+
+
+  <div class="row prayer-request-form" data-aos="fade-up">
+    <div class="col-12 form-card">
+      <p>Please fill in the form below to submit your prayer request</p>
+
+
+    <section class="section_form">
+      <form id="prayer-request-form" class="feed-form" action="{{ url_for('prayer_request') }}" method="POST">
+
+        <div class="input-style-1">
+        <input name="name" placeholder="Enter Your Name" type="text"  required>
+        </div>
+        
+        <div class="input-style-1">
+        <input name="phone-no" type="tel" placeholder="Enter Your Phone Number">
+        </div>
+
+        <div class="input-style-1">
+        <input name="email-address" placeholder="Enter Your E-mail" type="email">
+        </div>
+
+        <div class="input-style-1">
+        <textarea name="request" rows="8"  placeholder="Enter Your Prayer Request" required></textarea>
+        </div>
+
+        <button type="submit" class="btn button_submit">Submit Prayer Request</button>
+      </form>
+    </section>
+
+  
+    </div>
+  </div>
+    
+{% endblock content %}
+{% block script%}
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+const form = document.getElementById('prayer-request-form');
+const submitButton = form.querySelector('button[type="submit"]');
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+
+
+form.addEventListener('submit', function (event) {
+  event.preventDefault(); 
+
+  submitButton.disabled = true;
+  submitButton.textContent = 'Submitting...';
+
+  const name = document.querySelector('#prayer-request-form input[name="name"]').value.trim();
+  const phone = document.querySelector('#prayer-request-form input[name="phone-no"]').value.trim();
+  const email_address = document.querySelector('#prayer-request-form input[name="email-address"]').value.trim();
+  const request = document.querySelector('#prayer-request-form textarea[name="request"]').value.trim();
+
+  // Validate required fields
+  if (!name || !request) {
+    alertError('Oops','Name and Prayer Request are required fields!');
+    submitButton.disabled = false; 
+    submitButton.textContent = 'Submit'; 
+    return;
+  }
+
+  if (email_address && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_address)) {
+    alertError('Oops','Please enter a valid email address.');
+    submitButton.disabled = false; 
+    submitButton.textContent = 'Submit'; 
+    return;
+  }
+
+  // Gather form data
+  const formData = new FormData();
+  formData.append('name', name)
+  formData.append('phone', phone)
+  formData.append('email', email_address)
+  formData.append('request', request)
+  
+  fetch(this.action, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrfToken
+    },
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alertSuccess('Form Submited', data.message);
+      form.reset(); 
+    } else {
+      alertError('Oops...',data.message );
+    }
+    submitButton.disabled = false;
+    submitButton.textContent = 'Submit';
+  })
+  .catch(error => {
+      console.error('Error:', error);
+      alert('An unexpected error occurred. Please try again later.');
+      submitButton.disabled = false;
+      submitButton.textContent = 'Submit';
+    });
+});
+
+
+});
+
+</script>
+
+{% endblock script %}
+
+
+

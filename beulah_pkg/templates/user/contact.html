@@ -1,0 +1,162 @@
+{% extends "user/user_template.html" %}
+{% block title %}Contact - Beulah Foundation for Christ{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+
+        {% include "user/navigation.html" %}
+
+
+        <div class="col-12 pages-banner">
+            <div class="banner-heading">
+                <h1>Contact us</h1>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="row contact-page-content">
+
+
+        <div class="col-md-3 hexagon" data-aos="fade-up">
+            <div class="hexagon-content">
+                <p><i class="fa-solid fa-location-dot"></i><p>
+                <p>No 2 Libya Crescent, off Libya Road <br>Barnawa GRA, Phase 1, Kaduna, Nigeria.</p>
+            </div>
+        </div>
+        <div class="col-md-3 hexagon" data-aos="fade-up">
+            <div class="hexagon-content">
+                <p><i class="fa-solid fa-phone-volume"></i></p>
+                <p><span>+234 8023071460</span><br><span>+234 7034138208</span></p>
+            </div>
+        </div>
+        <div class="col-md-3 hexagon" data-aos="fade-up">
+            <div class="hexagon-content">
+                <p><i class="fa-solid fa-envelope"></i></p>
+                <p><a href="mailto:beufoundation@yahoo.com">beufoundation@yahoo.com</a><br><a href="mailto:beufound@gmail.com">beufound@gmail.com</a><br><a href="mailto:efeyomi@gmail.com">efeyomi@gmail.com</a></p>
+            </div>
+        </div>
+        
+    </div>
+
+
+
+    <div class="row contact-form" data-aos="fade-up">
+
+        <div class="col-12 form-card">
+            <p>Contact Form</p>
+
+            <section class="section_form">
+                <form id="contact-admin-form" class="feed-form" action="{{ url_for('contact_us') }}" method="POST">
+
+                    <div class="input-style-1">
+                    <input name="name" placeholder="Name" type="text" required>
+                    </div>
+
+                    <div class="input-style-1">
+                    <input name="phone-no" type="tel" placeholder="Phone number" required>
+                    </div>
+
+                    <div class="input-style-1">
+                    <input name="email-address" placeholder="E-mail" type="email" required>
+                    </div>
+
+                    <div class="input-style-1">
+                    <textarea name="message" rows="8" placeholder="Message" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn button_submit">Submit Contact</button>
+                </form>
+            </section>
+            
+        </div>
+
+    </div>
+
+
+{% endblock content %}
+{% block script %}
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const contactForm =  document.getElementById('contact-admin-form');
+        const submitButton = contactForm.querySelector('button[type="submit"]');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+
+
+        contactForm.addEventListener('submit', function (event) {
+        event.preventDefault(); 
+
+        submitButton.disabled = true;
+        submitButton.textContent = 'Submitting...';
+        
+        // Gather form data
+        const name = document.querySelector('#contact-admin-form input[name="name"]').value.trim();
+        const phone = document.querySelector('#contact-admin-form input[name="phone-no"]').value.trim();
+        const email_address = document.querySelector('#contact-admin-form input[name="email-address"]').value.trim();
+        const message = document.querySelector('#contact-admin-form textarea[name="message"]').value.trim();
+
+
+        if (!name || !email_address || !phone || !message) {
+            alertError('Oops','All fields are required!')
+            submitButton.disabled = false; 
+            submitButton.textContent = 'Submit'; 
+            return;
+        }
+
+        if (email_address && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_address)) {
+            alertError('Oops','Please enter a valid email address.')
+            submitButton.disabled = false; 
+            submitButton.textContent = 'Submit'; 
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('name', name)
+        formData.append('phone', phone)
+        formData.append('email', email_address)
+        formData.append('request', message)
+        
+
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+            'X-CSRFToken': csrfToken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alertSuccess('Form Submited', data.message)
+                contactForm .reset(); 
+            } else {
+                alertError('Oops', data.message )
+            }
+            submitButton.disabled = false;
+            submitButton.textContent = 'Submit';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alertError('Oops', 'An unexpected error occurred. Please try again later.');
+            submitButton.disabled = false;
+            submitButton.textContent = 'Submit';
+        });
+        
+      
+        });
+    
+    
+    
+
+    });
+
+</script>
+
+{% endblock script %}

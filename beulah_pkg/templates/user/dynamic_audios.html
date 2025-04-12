@@ -1,0 +1,361 @@
+{% extends "user/user_template.html" %}
+
+
+{% block title %}{% if resource %} {{resource.resource_title}} {% endif %}  - Beulah Foundation for Christ{% endblock %}
+
+{% block content %}
+
+    {% if resource %}
+
+    <div class="row">
+
+        {% include "user/navigation.html" %}
+
+        <div class="col-12 pages-banner">
+
+            <div class="banner-heading">
+                <h1 class="dynamic-title-header">{{resource.resource_title}}</h1>
+            </div>
+            
+        </div>
+    
+    </div>
+
+
+
+   
+ 
+    <div class="row reading-resource-parent" data-aos="fade-up">
+        <div class="col-12">
+            <div class="audio-card">
+                <iframe
+                        title="" 
+                        src="https://www.youtube.com/embed/{{ resource.resource_body }}?modestbranding=1&rel=0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"  
+                        referrerpolicy="strict-origin-when-cross-origin" 
+                        frameborder="0" allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+
+
+    <div class="row comment-resource-parent" data-aos="fade-up">
+        <div class="col-12">
+
+            <div class="comment-card">
+                <span class="title">Recent Comments</span>
+                <div class="comments-list">
+                {% if comments %}
+                    {% for comment in comments %}
+                        <div class="comment-container" id="comment-{{comment.comment_id}}">
+                        <div class="user">
+                            <div class="user-pic">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="user-info">
+                            <span class="comment-by">{{comment.comment_by | title}}</span>
+                            <p>{{comment.formatted_date}}</p>
+                            </div>
+                        </div>
+                        <p class="comment-content">
+                            {{comment.comment_body}}
+                        </p>
+                        {% if user_token and user_token == comment.comment_token %}
+                        <div class="action-button">
+                            <button class="edit-btn" data-id="{{ comment.comment_id }}" title="Edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button class="cancel-btn" data-id="{{ comment.comment_id }}" title="Cancel" style="display:none;">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                            <button class="delete-btn" data-id="{{ comment.comment_id }}" title="Delete">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                        {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                        <p class="p-2">Be the first to add a comment 😊</p>
+                {% endif %}
+                
+                <div id="text-box-wrapper" class="text-box">
+                <div class="box-container">
+                    <p><span id="char-count">0</span>/850 characters</p>
+                    <form id="comment-form" method="POST">
+                        <input type="hidden" id="current-mode" value="add">
+                        <input type="text" placeholder="Please Enter Your Name" name="name" id="commenter" required>
+                        <textarea placeholder="Comment" id="comment-box" name="comment" required></textarea>
+                        <input type="hidden" id="comment-id" value="">
+                        <div class="formatting">
+                            <button type="button" class="emoji-btn" data-emoji="👍">👍</button>
+                            <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
+                            <button type="button" class="emoji-btn" data-emoji="😊">😊</button>
+                            <button type="button" class="emoji-btn" data-emoji="🙏">🙏</button>
+                            <button type="submit" class="send" title="Send">
+                                <i class="fa-solid fa-arrow-up"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    {% endif %}
+
+{% endblock content %}
+
+{% block script%}
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const commentForm = document.getElementById('comment-form')
+    const emojiButtons = document.querySelectorAll('.emoji-btn');
+    const textBox = document.getElementById('comment-box');
+    const charCountDisplay = document.getElementById('char-count');
+    const maxCharacters = 850;
+    
+
+    emojiButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      const emoji = this.getAttribute('data-emoji');
+
+      // Insert the emoji at the cursor's current position
+      const start = textBox.selectionStart;
+      const end = textBox.selectionEnd;
+      const text = textBox.value;
+
+      textBox.value = text.substring(0, start) + emoji + text.substring(end);
+
+      // Move the cursor to after the inserted emoji
+      textBox.selectionStart = textBox.selectionEnd = start + emoji.length;
+
+      // Focus the textarea
+      textBox.focus();
+    });
+  });
+
+
+
+    textBox.addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px'; 
+
+
+         // Update the characters counter
+        const text = textBox.value.trim();
+        const characterCount = text.length;
+        charCountDisplay.textContent = `${characterCount}`;
+
+       
+        // If charaters count exceeds the limit, truncate the text
+        if (characterCount > maxCharacters) {
+            textBox.value = text.slice(0, maxCharacters).join(' '); // Trim excess characters
+            wordCountDisplay.textContent = maxCharacters;
+        }
+    });
+
+
+
+   
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+
+        const commentId = this.dataset.id;
+
+        fetch('{{url_for("delete_comment")}}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ id: commentId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: "success",
+                    title: data.message,
+                    showConfirmButton: false,
+                    timer:800
+                });
+                const row = document.getElementById(`comment-${commentId}`);
+                if (row) {
+                    row.remove();
+                }
+            } else {
+                alertError('Error', data.message)
+            }
+        })
+        .catch(error => console.error('Error:', error));
+        });
+    });
+
+
+
+    document.querySelectorAll('.edit-btn').forEach(editButton => {
+        editButton.addEventListener('click', () => {
+            const commentId = editButton.getAttribute('data-id');
+            const textBoxWrapper = document.getElementById('text-box-wrapper');
+            const commentContainer= editButton.closest('.comment-container')
+            const commentContent = commentContainer.querySelector('.comment-content').textContent;
+            const cancelButton = editButton.closest('.action-button').querySelector('.cancel-btn');
+            const commenterName = editButton.closest('.comment-container').querySelector('.comment-by').textContent;
+            const commentIdInput = document.getElementById('comment-id');
+            const commentNameInput = document.getElementById('commenter');       
+            const currentMode = document.getElementById('current-mode');
+
+
+            currentMode.value = 'edit';
+            commentContainer.after(textBoxWrapper);
+            commentNameInput.value = commenterName;
+            textBox.value = commentContent;
+            commentIdInput.value = commentId;
+
+
+            // Hide the Edit button and show the Cancel button
+            editButton.style.display = 'none';
+            cancelButton.style.display = 'inline-block';
+            
+            
+        });
+
+    })
+
+
+
+    document.querySelectorAll('.cancel-btn').forEach(cancelButton => {
+        cancelButton.addEventListener('click', function () {
+            const commentContainer = this.closest('.comment-container');
+            const editButton =cancelButton.closest('.action-button').querySelector('.edit-btn')  
+
+            // Hide the Cancel button and show the Edit button
+            cancelButton.style.display = 'none';
+            editButton.style.display = 'inline-block';
+
+        // Reset the form and move the text box back to the bottom
+        
+            const commentForm = document.getElementById('comment-form');
+            const commentsList = document.querySelector('.comments-list');
+            const textBoxWrapper = commentForm.closest('.text-box');
+
+            document.getElementById('current-mode').value = 'add';
+            document.getElementById('comment-id').value='';
+            commentForm.reset();
+            commentsList.appendChild(textBoxWrapper); // Move back to the bottom
+    });
+    })
+
+
+
+    commentForm.addEventListener('submit', function(event){
+        event.preventDefault()
+
+        const name = document.querySelector('input[name="name"]').value.trim()
+        const comment = document.querySelector('textarea[name="comment"]').value.trim()
+        const currentMode = document.getElementById('current-mode').value;
+        const textBoxWrapper = document.getElementById('text-box-wrapper');
+        const commentId = document.getElementById('comment-id').value;
+        const id = '{{resource.resource_id}}'
+
+        if (!name || !comment){
+            alertError('Oops...', 'Name field and comment field are required');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('comment', comment);
+
+        if (currentMode === 'add'){
+            
+            fetch(`/add-comment/${id}/`, {
+            method : 'POST',
+            headers: {
+              'X-CSRFToken': csrfToken
+            },
+            body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alertSuccess('Comment Added',data.message);
+                    location.reload()
+                    
+                } else {
+                    alertError('Error ', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alertError('Oops', 'An unexpected error occurred. Please try again.');
+            });
+            
+        }else if(currentMode === 'edit'){
+            
+            fetch(`/edit_comment/${commentId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const textBoxWrapper = document.getElementById('text-box-wrapper');
+                    const commentsList = document.querySelector('.comments-list');
+
+                    // Move the text box wrapper back to the bottom of the comments list
+                    commentsList.appendChild(textBoxWrapper);
+
+                    currentMode.value = 'add';
+                    commentId.value = '';
+                    document.querySelector(`#comment-${commentId} .comment-by`).textContent = name;
+                    document.querySelector(`#comment-${commentId} .comment-content`).textContent = comment;
+                    commentForm.reset();
+                    document.querySelector(`#comment-${commentId} .cancel-btn`).style.display = 'none';
+                    document.querySelector(`#comment-${commentId} .edit-btn`).style.display = 'inline-block';
+                    Swal.fire({
+                    icon: "success",
+                    title: 'Successful',
+                    showConfirmButton: false,
+                    timer:800
+                });
+                } else {
+                    alertError('Oops...',data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    
+        } 
+    
+    })
+
+  
+  
+
+
+   
+    
+ })
+</script>
+
+{% endblock script %}
+
+
+
+

@@ -1,0 +1,13 @@
+{% extends 'error/error_templates.html' %}
+
+{% block error_msg %}
+        <h5>Oops! Something went wrong on our end. 😓</h5>
+       <p>But don't worry, it's not you, it's us. 🙃</p>
+       <p>If you need immediate assistance, feel free to reach out to us:</p>
+       <p>📞 Phone: +234-8023071460 <br><br> 📧 Email: efeyomi@gmail.com</p> 
+       <p>In the meantime, why not:</p>   
+       <a href="{{url_for('home')}}">👉 Go back home </a>  <span>and try again later?</span>
+{% endblock error_msg %}
+
+
+

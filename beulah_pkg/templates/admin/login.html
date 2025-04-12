@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login - Beulah Foundation for Christ</title>
+   
+
+    <!-- SEO configuration starts here -->
+    <meta name="keywords" content="Beulah Foundation for Christ, Christian ministry, evangelism and discipleship, preparing for Christ's return, biblical discipleship, Christ-centered ministry, gospel outreach, Matthew 28:18-20 ministry, Isaiah 62:4 mandate, spiritual growth, Body of Christ, Christian character development, faith-based organization, Christian teaching and training, how to grow spiritually in Christ, Christian ministry focused on discipleship, evangelism and discipleship training, biblical resources for Christian growth, preparing for the second coming of Jesus, becoming Christlike in daily life"/>
+    <meta name="description" content="Beulah Foundation for Christ is a God-founded ministry dedicated to preparing believers for the return of Jesus Christ through evangelism and discipleship (Matthew 28:18-20). Rooted in the mandate of Isaiah 62:4, our mission is to nurture true Christlike character in all aspects of life. We serve as a resource for spiritual growth, equipping the Body of Christ while contributing to societal well-being. Join us on this divine journey and become part of our joyful family in Christ!">
+    <meta name="author" content="Oloruntobi Grace"/>
+
+    <meta property="og:title" content="Beulah Foundation for Christ - A Christian Ministry for Discipleship and Spiritual Growth"/>
+    <meta property="og:description" content="Beulah Foundation for Christ is a God-founded ministry dedicated to preparing believers for the return of Jesus Christ through evangelism and discipleship (Matthew 28:18-20). Rooted in the mandate of Isaiah 62:4, our mission is to nurture true Christlike character in all aspects of life. We serve as a resource for spiritual growth, equipping the Body of Christ while contributing to societal well-being. Join us on this divine journey and become part of our joyful family in Christ!"/>
+    <meta property="og:image" content="{{url_for('static', filename='images/new_logo.png')}}"/>
+    <meta property="og:url" content="{{url_for('home')}}"/>
+    <meta property="og:locale" content="en_NG"/>
+
+
+    <meta name="twitter:title" content="Beulah Foundation for Christ - A Christian Ministry for Discipleship and Spiritual Growth"/>
+    <meta name="twitter:description" content="Beulah Foundation for Christ is a God-founded ministry dedicated to preparing believers for the return of Jesus Christ through evangelism and discipleship (Matthew 28:18-20). Rooted in the mandate of Isaiah 62:4, our mission is to nurture true Christlike character in all aspects of life. We serve as a resource for spiritual growth, equipping the Body of Christ while contributing to societal well-being. Join us on this divine journey and become part of our joyful family in Christ!"/>
+    <meta name="twitter:image" content="{{url_for('static', filename='images/new_logo.png')}}"/>
+    <meta name="twitter:url" content="{{url_for('home')}}"/>
+    <meta property="twitter:locale" content="en_NG"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="canonical" href="https://beufoundation.org/">
+
+    <!-- SEO configuration ends here -->
+     
+    <!-- Favicons configuration starts here -->
+    <link rel="icon" type="image/png" href="{{url_for('static', filename='images/favicon/favicon-96x96.png')}}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{url_for('static', filename='images/favicon/favicon.svg')}}" />
+    <link rel="shortcut icon" href="{{url_for('static', filename='images/favicon/favicon.ico')}}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{url_for('static', filename='images/favicon/apple-touch-icon.png')}}" />
+    <link rel="manifest" href="{{url_for('static', filename='images/favicon/site.webmanifest')}}" />
+  
+    <!-- Favicons configuration ends here -->
+
+    <!-- Stylesheets links starts here -->
+
+    <!-- DNS prefetch for non-critical CDNs -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+    <!-- Preconnect for critical font domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Google Fonts with optimized weights and display -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Critical stylesheets -->
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/bootstrap/css/bootstrap.min.css')}}" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static', filename='assets/fa/css/all.min.css')}}" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css_folder/admin_stylesheet.min.css')}}">
+
+    <!-- Non-critical stylesheets (loaded asynchronously) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" media="print" onload="this.media='all'">
+
+
+    <!-- Noscript fallback for critical styles -->
+    <noscript>
+        <link rel="stylesheet" href="{{url_for('static', filename='assets/bootstrap/css/bootstrap.min.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='assets/fa/css/all.min.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css_folder/admin_stylesheet.min.css')}}">
+    </noscript>
+    
+    {% block link %} {% endblock link %}
+
+    <!-- Stylesheets links ends here -->
+
+
+
+</head>
+
+<body>
+    <div id="preloader" role="status" aria-live="polite">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+        <p>Loading, please wait...</p>
+    </div>
+    
+    <div class="container-fluid content-container" id="content-container">
+
+        <div class="row">
+            <div class="col-12 admin-login-container">
+
+                <form id="login-form" class="form" action="{{url_for('admin_login')}}" method="POST">
+                    <p class="form-title">Admin Login</p>
+
+                    <div class="input-container">
+                        <input type="text" placeholder="Enter username" name="username" required>
+                    </div>
+
+                    <div class="input-container">
+                        <input id='password-input' type="password" placeholder="Enter password" name="password" required>
+                        <span id="see-password" style="cursor: pointer;">
+                            <i class="fa-regular fa-eye"></i>
+                        </span>
+                    </div>
+
+                    <button type="submit" class="submit">
+                         Log in
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- Javascripts/jQuery starts here -->
+    <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.js"></script>
+    <script defer src="{{url_for('static', filename='javascript_folder/admin_script.min.js')}}"></script>
+    <!-- Javascripts/jQuery ends here -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const loginForm = document.getElementById('login-form')
+            const seePwd = document.getElementById('see-password')
+            const pwdInput = document.getElementById('password-input');
+    
+
+
+        seePwd.addEventListener('click', function () {
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                this.innerHTML = `<i class="fa-regular fa-eye-slash"></i>`;
+            } else {
+                pwdInput.type = 'password';
+                this.innerHTML = `<i class="fa-regular fa-eye"></i>`;
+            }
+        });
+
+        loginForm.addEventListener('submit', function(event){
+                event.preventDefault()
+
+                const username = document.querySelector('input[name="username"]').value.trim()
+                const password = document.querySelector('input[name="password"]').value.trim()
+
+                if (!username || !password){
+                    Swal.fire({
+                        icon: "error",
+                        title: 'Oops...',
+                        text:'The two fields cannot be empty',
+                        showConfirmButton: true,
+                        timer:2000
+                    });
+                    return
+                }
+                
+                const formData = new FormData()
+                formData.append('username', username);
+                formData.append('password', password);
+
+                fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data =>{
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            text: data.message,
+                            showConfirmButton: true,
+                            timer:10000
+                        });
+                        window.location.href = data.redirect_url;
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title:'Error',
+                            text: data.message,
+                            showConfirmButton: true
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: "error",
+                        title:'Error',
+                        text: 'An unexpected error occurred. Please try again.',
+                        showConfirmButton: true
+                    });
+                });
+            })
+
+        })
+    </script>
+
+</body>
+
+</html>

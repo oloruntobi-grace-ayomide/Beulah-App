@@ -1,0 +1,9 @@
+{% extends 'error/error_templates.html' %}
+
+{% block error_msg %}
+        <h5>Bad Request! Something went a little wonky. 🌀</h5> 
+        <p>Looks like the server couldn't make sense of what you asked for. 🤷‍♀️</p>
+        <p>But no worries, you can:</p>
+        <a href="{{url_for('home')}}"> 👉 Go back home </a> <span> and try again!</span> 
+{% endblock error_msg %}
+

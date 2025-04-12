@@ -1,0 +1,9 @@
+{% extends 'error/error_templates.html' %}
+
+{% block error_msg %}
+        <h5>Oops! Your request timed out. ⏱️</h5>
+        <p>It looks like your request took too long to process. The server gave up waiting, but don't worry—you can try again!</p>
+        <p>If the problem keeps happening, feel free to contact us:</p>
+        <p>📞 Phone: +234-8023071460 <br><br> 📧 Email: efeyomi@gmail.com</p>  
+        <a href="{{url_for('home')}}">Go To Home</a>  
+{% endblock error_msg %}

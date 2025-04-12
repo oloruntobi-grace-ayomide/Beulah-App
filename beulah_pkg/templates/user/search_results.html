@@ -1,0 +1,195 @@
+{% extends "user/user_template.html" %}
+
+
+{% block title %}Search Results - Beulah Foundation for Christ{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+
+        {% include "user/navigation.html" %}
+
+
+        
+        <div class="col-12 pages-banner">
+            <div class="banner-heading">
+                <h1 class="searh-results-header">Search Results for "{{search_term }}"</h1>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="row all-search-container">
+        <div class="col-12">
+            {% if not reading_resources and not audio_resources %}
+                {% if search_term and search_term != '' %}
+                    <p class="not-found">Oops! No results found for "{{search_term}}" 😌. Please try searching for something else.</p>
+                {% endif %}
+            {% else %}
+
+                {% if reading_resources %}
+                    <h4>Results from Reading Resources</h4>
+                    <div class="row resources-container mb-5">
+                        {% for resource in reading_resources %}
+
+                            <div class="col-12 mt-5">
+                                <div class="sermon-card">
+                                    <div class="text-section">
+                                    <h3>{{resource.resource_title}}</h3>              
+                                    <p><span class="date-title">Date:</span> <span class="date">{{resource.resource_date.strftime('%d-%b-%Y')}}</span></p>
+                                    <p>
+                                        {{resource.resource_body[0:280] | safe}}...
+                                    </p>
+                                    <div class="mt-3">
+                                    {% if resource.resource_type == 'text' %}
+                                    <a href="{{url_for('dynamic_messages', id=resource.resource_id)}}" class="read-more">Read More</a>
+                                    {% else %}
+                                    <a href="{{url_for('dynamic_slides', id=resource.resource_id)}}" class="read-more">Read More</a>
+                                    {% endif %}
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+
+                        <div class="col-12 resource-pagination">
+                            <nav aria-label="...">
+                                <ul class="pagination">
+                                    {% if reading_pagination %}
+                                        {% if reading_pagination.has_prev %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ base_url }}?page={{ reading_pagination.prev_num }}"><i class="fa-solid fa-angle-left"></i></a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link"><i class="fa-solid fa-angle-left"></i></span>
+                                            </li>
+                                        {% endif %}
+                        
+                                        {% for page_num in reading_pagination.iter_pages(left_edge=0, right_edge=0, left_current=0, right_current=0) %}
+                                            {% if page_num %}
+                                                <li class="page-item {% if page_num == reading_pagination.page %}active{% endif %}">
+                                                    <a class="page-link" href="{{ base_url }}?page={{ page_num }}">{{ page_num }}</a>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                        
+                                        {% if reading_pagination.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ base_url }}?page={{ reading_pagination.next_num }}"><i class="fa-solid fa-angle-right"></i></a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link"><i class="fa-solid fa-angle-right"></i></span>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                {% endif %}
+
+
+
+                {% if audio_resources %}
+                    <h4>Results from Audio Resources</h4>
+                    <div class="row resources-container mb-5">
+                        {% for resource in audio_resources %}
+                        
+                            <div class="col mt-5">
+                                <div class="audio-card">
+                                    <div class="text-section">
+                                    <h3>{{resource.resource_title}}</h3>              
+                                    <p><span class="date-title">Date:</span> <span class="date">{{resource.resource_date.strftime('%d-%b-%Y')}}</span></p>
+                                    <a href="{{url_for('dynamic_audios', id=resource.resource_id)}}" class="play-audio">
+                                        <i class="fa-solid fa-play"></i> 
+                                    </a>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                        {% endfor %}
+
+                        <div class="col-12 resource-pagination">
+                            <nav aria-label="...">
+                                <ul class="pagination">
+                                    {% if audio_pagination %}
+                                        {% if audio_pagination.has_prev %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ base_url }}?page={{ audio_pagination.prev_num }}"><i class="fa-solid fa-angle-left"></i></a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link"><i class="fa-solid fa-angle-left"></i></span>
+                                            </li>
+                                        {% endif %}
+                        
+                                        {% for page_num in audio_pagination.iter_pages(left_edge=0, right_edge=0, left_current=0, right_current=0) %}
+                                            {% if page_num %}
+                                                <li class="page-item {% if page_num == audio_pagination.page %}active{% endif %}">
+                                                    <a class="page-link" href="{{ base_url }}?page={{ page_num }}">{{ page_num }}</a>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                        
+                                        {% if audio_pagination.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ base_url }}?page={{ audio_pagination.next_num }}"><i class="fa-solid fa-angle-right"></i></a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link"><i class="fa-solid fa-angle-right"></i></span>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>  
+                {% endif %}
+
+
+            {% endif %}
+</div>
+    </div>
+
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

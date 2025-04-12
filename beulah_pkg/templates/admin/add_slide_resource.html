@@ -1,0 +1,155 @@
+{% extends 'admin/admin_template.html '%}
+
+{% block title %}Add New slide Resource - Beulah Foundation for Christ{% endblock title %}
+
+
+{% block content %}
+
+<div class="row editor-container">
+    <div class="col-12 card-style">
+        <h2>Add New Slide Resource</h2>
+        <form id="resourceForm" method="POST" action="{{ url_for('add_slide_resource') }}">
+
+            <div class="input-style-1">
+              <label for="title">Title</label>
+              <input type="text" id="title" 
+                name="title" 
+                placeholder="Enter message title">
+            </div>
+
+            <div class="input-style-1">
+                <label for="image">Images</label>
+                <input type="file" id="image" 
+                  name="image">
+            </div>
+
+            <div class="input-style-1">
+              <label for="content">Slide Content</label>
+              <div id="editor"></div>
+            </div>
+
+            <div class="links-buttons">
+              <button type="submit" class="butt-2 me-3">Upload</button>
+              <a href="{{url_for('admin_slide_resources')}}" class="link-2">Close</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+   
+   
+
+{% endblock content %}
+
+{% block script %}
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<script>
+
+window.addEventListener('DOMContentLoaded', function(){
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    const toolbarOptions = [
+      [{ 'size': ['small', false] }], 
+      ['bold', 'italic', 'underline'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+    ];
+
+    const quill = new Quill('#editor', {
+        modules: {
+            clipboard: {
+                matchers: [
+                  ['*', (node, delta) => {
+                      delta.ops.forEach(op => {
+                          if (op.attributes && (op.attributes.background || op.attributes.color)) {
+                          delete op.attributes.background;
+                          delete op.attributes.color;
+                          }
+                      });
+                      return delta;
+                  }]
+                ]
+            },
+            toolbar: toolbarOptions
+        },
+        
+        theme: 'snow',
+        placeholder:'Enter the Content of the messsage'
+    });
+    
+
+    document.getElementById('resourceForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Get data
+        const title = document.getElementById('title').value;
+        const image = document.getElementById('image').files[0]
+        const content = quill.root.innerHTML;
+        const cleanedContent = content.replace(/<p><br><\/p>/g, '').trim();
+
+
+        if (!title.trim() || !cleanedContent.trim() || !image) {
+            alertError('Error','Please fill out all fields.');
+            return;
+        }
+
+        if (image.size > 3 * 1024 * 1024) {
+            alertError('Error', `${image.name} is too large. Max file size is 3MB.`) 
+            return;
+        }
+
+        const form = new FormData();
+        form.append('title', title);
+        form.append('image', image);
+        form.append('content', cleanedContent);
+
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            body: form
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+            Swal.fire({
+            title: 'Successful',
+            text: 'Slide Resource uploaded successfully!',
+            icon: 'success',
+            customClass: {
+            title: 'my-swal-title',
+            confirmButton: 'my-swal-confirm-btn',
+            }
+            }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = data.redirect_url;
+            }
+            });
+            } else {
+            alertError('Error', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alertError('Error', 'An unexpected error occurred. Please try again.');
+            });
+        
+    });
+
+
+})
+</script>
+    
+{% endblock script %}
+                           
+
+
+
+
+
+
+       
+   
+    
+ 
+      

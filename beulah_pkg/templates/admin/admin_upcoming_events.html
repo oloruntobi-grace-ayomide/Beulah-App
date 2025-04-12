@@ -1,0 +1,199 @@
+{% extends 'admin/admin_template.html '%}
+
+{% block title %}Upcoming Events- Beulah Foundation for Christ{% endblock title %}
+
+
+{% block content %}
+
+    <div class="row filter-parent-container">
+        <div class="col-12 filter-container">
+
+            <div class="add-resource-div">
+                <a href="{{url_for('add_new_event')}}" class="link-1">Add New Event</a>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-12 table-wrapper">
+
+            <table class="table">
+
+                <thead>
+                    <tr>
+                    <th class="loop-num">
+                        <h5>
+                            #
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>Theme</h5>
+                    </th>
+                    <th>
+                        <h5>Date</h5>
+                    </th>
+                    <th>
+                        <h5>Time</h5>
+                    </th>
+
+                    <th>
+                        <h5>Venue</h5>
+                    </th>
+
+                    <th>
+                        <h5>Short Prayer</h5>
+                    </th>
+
+                    <th>
+                        <h5>Date posted</h5>
+                    </th>
+
+                    <th>
+                        <h5>Edit</h5>
+                    </th>
+
+                    <th>
+                        <h5>Delete</h5>
+                    </th>
+
+                    </tr>
+                    
+                </thead>
+
+                <tbody>
+                    {% if events %}
+                        {% for event in events %}
+                            <tr id="event-{{event.event_id}}">
+                                <td class="loop-num">
+                                    <p>{{loop.index }}</p>
+                                </td>
+                        
+                                <td class="min-width special-td">
+                                    <p>
+                                        {% if event.event_theme|length >20 %}
+                                        {{ event.event_theme[0:20] }}...
+                                        {% else %}
+                                            {{ event.event_theme }}
+                                        {% endif %}
+                                    </p>
+                                </td>
+
+                                <td class="min-width special-td">
+                                    <p>{{ event.formated_date }}</p>
+                                </td>
+
+                                <td class="min-width">
+                                    <p>{{event.event_time.strftime('%I:%M %p') }}</p>
+                                </td>
+
+                                <td class="min-width">
+                                    <p>{{event.event_venue}}</p>
+                                </td>
+
+                                <td class="min-width special-td">
+                                    <p>
+                                        {% if event.event_description|length > 15 %}
+                                        {{ event.event_description[0:15] }}...
+                                        {% else %}
+                                            {{ event.event_description }}
+                                        {% endif %}
+                                    </p>
+                                </td>
+
+                                <td class="min-width">
+                                    <p>{{ event.event_updated_date.strftime('%d-%b-%Y') }}</p>
+                                </td>
+
+                                <td class="edit-action">
+                                    <p class="pointer"><a href="{{ url_for('edit_event', id=event.event_id) }}"><i class="fa-regular fa-pen-to-square"></i> Edit</a></p>
+                                </td>
+
+                                <td class="action">
+                                    <p class="pointer delete-event-btn" data-id='{{event.event_id}}'><i class="fa-regular fa-trash-can"></i></p>
+                                </td>
+
+                            </tr> 
+                        {% else%}
+                            <tr>
+                                <td colspan="8" class="text-center"><p>No Event Found</p></td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center"><p>No Event Found</p></td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      
+
+    document.querySelectorAll('.delete-event-btn').forEach(button => {
+        button.addEventListener('click', function () {
+
+            const upId = this.dataset.id;
+
+            // Confirm action
+            confirmDelete('Are you sure you want to delete this event ?')
+            .then(confirmed => {
+            if (!confirmed) {
+                return;
+            }
+
+            fetch('{{url_for("delete_event")}}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ id: upId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alertSuccess2('Successful',data.message);
+                    const row = document.getElementById(`event-${upId}`);
+                    if (row) {
+                        row.remove();
+                    }
+                } else {
+                    alertError('Error', data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        })
+            
+        });
+
+    })    
+
+
+})
+</script>
+    
+{% endblock script %}
+                           
+
+
+
+
+
+
+       
+   
+    
+ 
+      

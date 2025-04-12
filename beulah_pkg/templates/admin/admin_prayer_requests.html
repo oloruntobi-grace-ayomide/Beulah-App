@@ -1,0 +1,381 @@
+{% extends 'admin/admin_template.html '%}
+
+{% block title %}Prayer Requests - Beulah Foundation for Christ{% endblock title %}
+
+
+{% block content %}
+
+    
+    <div class="row filter-parent-container">
+        <div class="col-12 filter-container">
+
+
+            <div class="filter-section">
+
+                <div class="select-style-1">
+                        
+                    <div class="select-position">
+                        <select class="form-select months" name="month">
+                            <option value="all" {% if request.args.get('month') == 'all' %}selected{% endif %}>All Months</option>
+                            <option value="1" {% if request.args.get('month') == '1' %}selected{% endif %}>January</option>
+                            <option value="2" {% if request.args.get('month') == '2' %}selected{% endif %}>February</option>
+                            <option value="3" {% if request.args.get('month') == '3' %}selected{% endif %}>March</option>
+                            <option value="4" {% if request.args.get('month') == '4' %}selected{% endif %}>April</option>
+                            <option value="5" {% if request.args.get('month') == '5' %}selected{% endif %}>May</option>
+                            <option value="6" {% if request.args.get('month') == '6' %}selected{% endif %}>June</option>
+                            <option value="7" {% if request.args.get('month') == '7' %}selected{% endif %}>July</option>
+                            <option value="8" {% if request.args.get('month') == '8' %}selected{% endif %}>August</option>
+                            <option value="9" {% if request.args.get('month') == '9' %}selected{% endif %}>September</option>
+                            <option value="10" {% if request.args.get('month') == '10' %}selected{% endif %}>October</option>
+                            <option value="11" {% if request.args.get('month') == '11' %}selected{% endif %}>November</option>
+                            <option value="12" {% if request.args.get('month') == '12' %}selected{% endif %}>December</option>
+                        </select>
+                        
+                    </div>
+                </div>
+                
+            
+                <div class="select-style-1">
+                    
+                    <div class="select-position">
+                        <select class="form-select sort-order" name="sortOrder">
+                            <option value="desc" {{ get_selected_option('desc') }}>Desc</option>
+                            <option value="asc" {{ get_selected_option('asc') }}>Asc</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="filter-prayer-requests" class="butt-1">Filter</button>
+            
+            </div>
+
+
+            <div class="pagination-container">
+
+                <!-- Pagination Controls -->
+                
+                <nav aria-label="...">
+                    <ul class="pagination">
+                    {% if pagination%}
+                    {% if pagination.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ base_url }}?page={{ pagination.prev_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}"><i class="fa-solid fa-angle-left"></i></a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fa-solid fa-angle-left"></i></span>
+                        </li>
+                    {% endif %}
+                    {%endif%}
+
+                    
+
+                    {% if pagination %}
+                        {% for page_num in pagination.iter_pages(left_edge=0, right_edge=0, left_current=0, right_current=0) %}
+                        
+                        {% if page_num %}
+                            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                <a class="page-link" href="{{ base_url }}?page={{ page_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+
+                        {% endfor %}
+                    {% endif%}
+
+
+
+                    {% if pagination %}
+                    {% if pagination.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ base_url }}?page={{ pagination.next_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}"><i class="fa-solid fa-angle-right"></i></a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fa-solid fa-angle-right"></i></span>
+                        </li>
+                    {% endif %}
+                    {% endif %}
+                    </ul>
+                </nav>
+
+            </div>
+
+        </div>
+
+    </div>
+   
+      
+    <div class="row">
+        <div class="col-12 table-wrapper">
+
+            <table class="table">
+
+                <thead>
+                    <tr>
+                    <th class="loop-num">
+                        <h5>
+                            #
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>Name</h5>
+                    </th>
+                    <th>
+                        <h5>Phone-no</h5>
+                    </th>
+                    <th>
+                        <h5>Email Address</h5>
+                    </th>
+
+                    <th>
+                        <h5>Prayer Request</h5>
+                    </th>
+
+                    <th>
+                        <h5>Date</h5>
+                    </th>
+
+                    <th>
+                        <h5>View</h5>
+                    </th>
+
+                    <th>
+                        <h5>Delete</h5>
+                    </th>
+
+                    </tr>
+                    
+                </thead>
+
+
+                <tbody>
+                    {% if prayer_requests %}
+                        {% for pr in prayer_requests %}
+                            <tr id="pr-{{pr.pr_id}}"
+                                data-name="{{ pr.pr_name }}"
+                                data-phone="{{ pr.pr_phone }}"
+                                data-email="{{ pr.pr_email }}"
+                                data-message="{{ pr.pr_message }}">
+                                <td class="loop-num">
+                                    <p>{{ (pagination.page - 1) * pagination.per_page + loop.index }}</p> 
+                                </td>
+
+                                <td class="min-width special-td">
+                                    <p>
+                                        {% if pr.pr_name|length > 20 %}
+                                        {{ pr.pr_name[0:20] }}...
+                                        {% else %}
+                                            {{ pr.pr_name }}
+                                        {% endif %}
+                                    </p>
+                                  
+                                </td>
+            
+                                <td class="min-width">
+                                    <p>{{pr.pr_phone}}</p>
+                                </td>
+            
+                                <td class="min-width special-td">
+                                    <p>{{pr.pr_email}}</p>
+                                </td>
+            
+                                <td class="min-width special-td">
+                                    <p>
+                                        {% if pr.pr_message|length > 17 %}
+                                            {{ pr.pr_message[0:17] }}...
+                                        {% else %}
+                                            {{ pr.pr_message }}
+                                        {% endif %}
+                                    </p>
+                                </td>
+
+                                <td class="min-width">
+                                    <p>{{pr.pr_date.strftime('%d-%b-%Y')}}</p>
+                                </td>
+            
+                                <td class="view-action">
+                                    <p  class="pointer view-pr-btn" data-id="{{pr.pr_id}}"><i class="fa-regular fa-eye"></i>
+                                        {% if pr.pr_is_read == False %}
+                                            View
+                                        {% else %}
+                                            viewed 
+                                        {% endif %}
+                                        </p>
+                                </td>
+            
+                                <td class="action">
+                                    <p class="pointer delete-pr-btn" data-id="{{pr.pr_id}}"><i class="fa-regular fa-trash-can"></i></p>
+                                </td>
+                                
+                            </tr>
+                        {% endfor %}
+                    {%else%}
+                    <tr>
+                        <td colspan="8" class="text-center">No Prayer Request Found</td>
+                    </tr>
+                    {% endif %}
+                
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+
+    <div class="row rendering-row" id="rendering-row">
+        <div class="col rendering-modal ">
+            <div class="card-style-2" tabindex="0">
+
+                <div class="card-image">
+                    <img src="{{url_for('static', filename='images/pray.png')}}" alt="praying hands" loading="lazy" />
+                </div>
+
+                <div class="card-content">
+                    <h3 id="pr-name"></h3>
+                    <h5 id="pr-phone"></h5>
+                    <h5 id="pr-email"><a href="mailto:"></a></h5>
+                    <p class="mt-4" id="pr-message"></p>
+                    <div class="mt-5">
+                        <button id="closing-button" class="butt-2">close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block script %}
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const baseUrl = "{{ base_url }}";
+
+    document.querySelectorAll('.delete-pr-btn').forEach(button => {
+        button.addEventListener('click', function () {
+
+            const prId = this.dataset.id;
+
+            // Confirm action
+            confirmDelete('Are you sure you want to delete this prayer request?')
+            .then(confirmed => {
+                if (!confirmed) {
+                    return;
+                }
+
+                fetch('{{url_for("delete_prayer_request")}}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ id: prId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alertSuccess2('Successful',data.message);
+                        const row = document.getElementById(`pr-${prId}`);
+                        if (row) {
+                            row.remove();
+                        }
+                    } else {
+                        alertError('Error', data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            })
+ 
+        });
+    });
+
+
+    const modalParent = document.getElementById('rendering-row')
+    const renderingModal = document.querySelector('.rendering-modal .card-style-2')
+    const closeBtn = document.getElementById("closing-button")
+
+    document.querySelectorAll('.view-pr-btn').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.stopPropagation();
+            const prId = this.dataset.id;
+            const row = document.getElementById(`pr-${prId}`);
+            if (!row) {
+            return;
+            }
+            // Extract details using data attributes
+            const prName = row.dataset.name;
+            const prPhone = row.dataset.phone;
+            const prEmail = row.dataset.email;
+            const prMessage = row.dataset.message;
+           
+
+            // Populate the modal content using direct ID selectors
+            renderingModal.querySelector('#pr-name').textContent = prName;
+            renderingModal.querySelector('#pr-phone').textContent = prPhone;
+            renderingModal.querySelector('#pr-email a').href = `mailto:${prEmail.trim()}`;
+            renderingModal.querySelector('#pr-email a').textContent = prEmail;
+            renderingModal.querySelector('#pr-message').textContent = prMessage;
+            
+            // Show modal and set focus for accessibility
+            modalParent.classList.add('show');
+            renderingModal.focus(); 
+                    
+        });
+    });
+
+    
+    // Close modal on close button click
+    closeBtn.addEventListener('click', function(event) {
+        event.stopPropagation();
+        modalParent.classList.remove('show');
+    });
+
+    // Close modal when clicking outside the modal content
+    modalParent.addEventListener('click', (e) => {
+        if (!renderingModal.contains(e.target)) {
+            modalParent.classList.remove('show');
+        }
+    });
+
+
+    // Allow closing modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && modalParent.classList.contains('show')) {
+            modalParent.classList.remove('show');
+        }
+    });
+
+
+
+    document.getElementById('filter-prayer-requests').addEventListener('click', function () {
+    
+        const sortOrder = document.querySelector('select[name="sortOrder"]').value;
+        const month = document.querySelector('select[name="month"]').value;
+    
+        const url = `${baseUrl}?page=1&sortOrder=${sortOrder}&month=${month}`;
+        window.location.href = url;
+    
+    });
+    
+    
+    })
+
+</script>
+    
+{% endblock script %}
+                           
+
+
+
+
+
+
+       
+   
+    
+ 
+      

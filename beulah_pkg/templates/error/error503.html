@@ -1,0 +1,9 @@
+{% extends 'error/error_templates.html' %}
+
+{% block error_msg %}
+        <h5>Oops! We're temporarily unavailable. 😅</h5>
+        <p>Our server is currently busy or undergoing maintenance. But don't worry, we'll be back up shortly!</p>
+        <p>If you need immediate assistance in the meantime, feel free to reach out to us:</p>
+        <p>📞 Phone: +234-8023071460 <br><br> 📧 Email: efeyomi@gmail.com</p>    
+        <a href="{{url_for('home')}}">👉 Go back home</a>  
+{% endblock error_msg %}

@@ -1,0 +1,56 @@
+{% extends 'admin/admin_template.html '%}
+
+{% block title %}Calendar - Beulah Foundation for Christ{% endblock title %}
+{% block link %}
+<link rel="preload" href="{{url_for('static', filename='css_folder/pignose.calendar.min.css')}}" as="style" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{url_for('static', filename='css_folder/pignose.calendar.min.css')}}"></noscript>
+{% endblock link %}
+
+{% block content %}
+
+    <div class="row">
+        
+        <div class="col-12 calendar-container">
+            
+            <div class="calendar-body">
+                
+                <div class="calendar-title">
+                    <h4>Calender</h4>
+                </div>
+                <div class="year-calendar"></div>
+            </div>
+        
+        </div>
+        
+    </div>
+      
+{% endblock content %}
+
+{% block script %}
+    <script src="{{url_for('static',filename='javascript_folder/jquery-3.7.1.min.js')}}"></script>
+    <script src="{{url_for('static',filename='javascript_folder/pignose.calendar.full.min.js')}}"></script>
+    
+    <script>
+        $(function () {
+            "use strict";
+
+            // Year calendar (displays a full calendar in a div)
+            $('.year-calendar').pignoseCalendar({
+                theme: 'blue', // Options: 'light', 'dark', 'blue'
+            });
+
+        });
+    </script>
+{% endblock script %}
+                           
+
+
+
+
+
+
+       
+   
+    
+ 
+      

@@ -1,0 +1,331 @@
+{% extends 'admin/admin_template.html '%}
+
+{% block title %}Subscribers list - Beulah Foundation for Christ{% endblock title %}
+
+
+{% block content %}
+
+    
+    <div class="row filter-parent-container">
+        <div class="col-12 filter-container">
+
+            <div class="add-resource-div">
+                <button class="link-2" id="emails-only"> Get Emails Only </button>
+            </div>
+
+            <div class="filter-section">
+
+                <div class="select-style-1">
+                    <div class="select-position">
+
+                        <select class="form-select subscribers-select" name="subscriberStatus">
+                            <option value="all" {{ get_selected_status('all') }}>All</option>
+                            <option value="active" {{ get_selected_status('active') }}>Active</option>
+                            <option value="unsubscribed" {{ get_selected_status('unsubscribed') }}>Unsubscribed</option>
+                        </select>
+                        
+                    </div>
+                </div>
+                
+            
+                <div class="select-style-1">
+                    
+                    <div class="select-position">
+                        <select class="form-select sort-order" name="sortOrder">
+                            <option value="desc" {{ get_selected_option('desc') }}>Desc</option>
+                            <option value="asc" {{ get_selected_option('asc') }}>Asc</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="filter-subscribers" class="butt-1">Filter</button>
+            
+            </div>
+
+            <div class="search-filter-form">
+                <form role="search" id="subscribers-search-form">
+                    <input 
+                    type="search" placeholder="Search by email..." 
+                    name="email"
+                    aria-label="Search" 
+                    id="search-bar" 
+                    placeholder="Search by title..."
+                >
+                </form>
+            </div>
+
+            <div class="pagination-container">
+
+                <!-- Pagination Controls -->
+                
+                <nav aria-label="...">
+                    <ul class="pagination">
+                    {% if pagination%}
+                    {% if pagination.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ base_url }}?page={{ pagination.prev_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}&title={{ request.args.get('email', '') }}"><i class="fa-solid fa-angle-left"></i></a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fa-solid fa-angle-left"></i></span>
+                        </li>
+                    {% endif %}
+                    {%endif%}
+
+                    
+
+                    {% if pagination %}
+                        {% for page_num in pagination.iter_pages(left_edge=0, right_edge=0, left_current=0, right_current=0) %}
+                        
+                        {% if page_num %}
+                            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                <a class="page-link" href="{{ base_url }}?page={{ page_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}&title={{ request.args.get('email', '') }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+
+                        {% endfor %}
+                    {% endif%}
+
+
+
+                    {% if pagination %}
+                    {% if pagination.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ base_url }}?page={{ pagination.next_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}&title={{ request.args.get('email', '') }}"><i class="fa-solid fa-angle-right"></i></a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fa-solid fa-angle-right"></i></span>
+                        </li>
+                    {% endif %}
+                    {% endif %}
+                    </ul>
+                </nav>
+
+            </div>
+
+        </div>
+
+    </div>
+   
+      
+    <div class="row">
+        <div class="col-12 table-wrapper">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="loop-num"><h5>#</h5></th>
+                        <th><h5>Email</h5></th>
+                        <th><h5>Status</h5></th>
+                        <th><h5>Date Joined</h5></th>
+                        <th><h5>Delete</h5></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if subscribers %}
+                        {% for subscriber in subscribers %}
+                        <tr id="subscriber-{{subscriber.subscriber_id}}">
+                            <td class="loop-num"><p>{{ (pagination.page - 1) * pagination.per_page + loop.index }}</p> </td>
+                            <td><p>{{ subscriber.subscriber_email }}</p></td>
+                            <td><p class="pointer">{{ subscriber.subscriber_status }}</p></td>
+                            <td><p>{{ subscriber.subscriber_date_joined.strftime('%d-%b-%Y')}}</p></td>
+                            <td class="action text-start">
+                                <p class="pointer delete-subscriber-btn" data-id="{{subscriber.subscriber_id}}"><i class="fa-regular fa-trash-can"></i></p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center"><p>No Subscribers found</p></td>
+                        </tr>
+                    {% endif %}               
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const baseUrl = "{{ base_url }}";
+
+    // These values come from the backend pagination object
+    const currentPage = parseInt('{{ pagination.page }}');
+    const perPage = parseInt('{{ pagination.per_page }}');
+
+    document.querySelectorAll('.delete-subscriber-btn').forEach(button => {
+        button.addEventListener('click', function () {
+
+            const subscriberId = this.dataset.id;
+
+            // Confirm action
+            confirmDelete('Are you sure you want to delete this subscriber?')
+            .then(confirmed => {
+                if (!confirmed) {
+                    return;
+                }
+
+             
+                fetch('{{url_for("delete_subscriber")}}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ id: subscriberId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alertSuccess2('Successful',data.message);
+                        const row = document.getElementById(`subscriber-${subscriberId}`);
+                        if (row) {
+                            row.remove();
+                        }
+                    } else {
+                        alertError('Error', data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            })
+
+           
+        });
+    });
+
+
+
+    document.getElementById('filter-subscribers').addEventListener('click', function () {
+    
+        const sortOrder = document.querySelector('select[name="sortOrder"]').value;
+        const subscriberStatus = document.querySelector('select[name="subscriberStatus"]').value;
+    
+        const url = `${baseUrl}?page=1&sortOrder=${sortOrder}&subscriberStatus=${subscriberStatus}`;
+        window.location.href = url;
+    
+    });
+    
+    
+    
+    document.getElementById('subscribers-search-form').addEventListener('submit', function(event){
+            event.preventDefault();
+            if (localStorage.getItem('emailOnlyView')) {
+                localStorage.removeItem('emailOnlyView');
+            }
+            const sortOrder = document.querySelector('select[name="sortOrder"]').value;
+            const subscriberStatus = document.querySelector('select[name="subscriberStatus"]').value;
+            const emailQuery = document.querySelector('input[name="email"]').value;
+            
+            const url = `${baseUrl}?page=1&sortOrder=${sortOrder}&subscriberStatus=${subscriberStatus}&email=${emailQuery}`;       
+    
+            window.location.href = url;
+        });
+    
+
+
+    async function fetchEmails(sortOrder, subscriberStatus) {
+        const url = `/admin/subscribers-email/?page=${currentPage}&sortOrder=${sortOrder}&subscriberStatus=${subscriberStatus}`;
+        try {
+            const response = await fetch(url);
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching emails:', error);
+            throw error;
+        }
+    }
+    
+
+    // Event listener for the "emails-only" button
+    document.getElementById('emails-only').addEventListener('click', async function () {
+        const sortOrder = document.querySelector('select[name="sortOrder"]').value;
+        const subscriberStatus = document.querySelector('select[name="subscriberStatus"]').value;
+
+        try {
+            const emails = await fetchEmails(sortOrder, subscriberStatus);
+            localStorage.setItem('emailOnlyView', true);
+            renderEmailCard(emails);
+        } catch (error) {
+            alertError('An error occurred while processing your request. Please try again.');
+        }
+    });
+
+
+
+    // Function to render the email card and provide a close button to restore original content
+    function renderEmailCard(emails) {
+        const tableWrapper = document.querySelector('.table-wrapper');
+        const originalTable = tableWrapper.innerHTML;
+        const startIndex = ((currentPage - 1) * perPage) + 1;
+        const emailOnlyButton = document.getElementById('emails-only');
+
+        // Disable the button while email card is open
+        emailOnlyButton.disabled = true;
+
+        // Build the email list using map and join
+        const listItems = emails.length
+            ? emails.map((email, index) => `<li>${email}</li>`).join('')
+            : `<li>No emails found</li>`;
+
+        const emailCardHTML = `
+            <p class="heading">Subscriber Emails</p>
+            <div><ol class="email-list" start="${startIndex}">${listItems}</ol></div>
+            <div><button id="close-email-card" class="butt-2">Close</button></div>
+        `;
+
+        const emailCard = document.createElement('div');
+        emailCard.classList.add('card-emails-body');
+        emailCard.innerHTML = emailCardHTML;
+
+        // Replace the table content with the email card
+        tableWrapper.innerHTML = '';
+        tableWrapper.appendChild(emailCard);
+
+        // Set up the close button to remove the email view and restore the original table content
+        document.getElementById('close-email-card').addEventListener('click', function () {
+            localStorage.removeItem('emailOnlyView');
+            tableWrapper.innerHTML = originalTable;
+            emailOnlyButton.disabled = false;
+        });
+    }
+
+
+
+    // On page load, check localStorage and render the email card if needed
+    (async function () {
+        if (localStorage.getItem('emailOnlyView')) {
+            const sortOrder = document.querySelector('select[name="sortOrder"]').value;
+            const subscriberStatus = document.querySelector('select[name="subscriberStatus"]').value;
+            try {
+            const emails = await fetchEmails(sortOrder, subscriberStatus);
+            renderEmailCard(emails);
+            } catch (error) {
+            console.error('Error fetching emails:', error);
+            }
+        }
+    })();
+
+    
+    
+})
+</script>
+    
+{% endblock script %}
+                           
+
+
+
+
+
+
+       
+   
+    
+ 
+      

@@ -1,0 +1,13 @@
+{% extends 'error/error_templates.html' %}
+
+{% block error_msg %}
+
+        <h5>Method Not Allowed! 🚫</h5>
+        <p>Uh-oh! Looks like you're trying to use a trick this site doesn't know. 🧙‍♂️</p>
+        <p>Don't worry, though—let's get you back to safer ground:</p>
+                
+        <a href="{{url_for('home')}}">👉 Head back home</a>  
+{% endblock error_msg %}
+
+
+

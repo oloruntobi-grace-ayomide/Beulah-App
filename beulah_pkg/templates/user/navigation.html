@@ -1,0 +1,101 @@
+
+
+<div class="col-12 all-nav parent">
+
+
+           
+            <a class="navbar-logo" href="{{url_for('home')}}">
+                <img src="{{url_for('static', filename='images/testing_logo.png')}}" alt="Beulah foundation for christ logo">
+            </a>
+           
+
+            <div class="nav-menu-cont">
+
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"  id="search-toggle"></i>
+                </div>
+
+
+                <div class="nav-control">
+                    <div class="hamburger">
+                        <span class="line"></span><span class="line"></span><span class="line"></span>
+                    </div>
+                </div>
+
+                
+                <ul class="nav-menu">
+
+                    <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{{url_for('home')}}">Home</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('about')}}">About</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Spiritual Resources
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item drop-link" href="{{url_for('reading_resources')}}">Reading Resources</a></li>
+                            <li><a class="dropdown-item drop-link" href="{{url_for('audio_resources')}}">Audios</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('prayer_request')}}">Prayer Request</a>
+                    </li>
+
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('partnership')}}">Partnership</a>
+                    </li>
+
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('upcoming_event')}}">Upcoming Events</a>
+                    </li>
+
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('contact_us')}}">Contact</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+
+            <div class="search" id="search-input">
+                <form id="user-search-input" action="{{url_for('search_results')}}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input placeholder="Search..." type="text" name="query" id="query">
+                    <span id="close-search"><i class="fa-solid fa-xmark"></i></span>
+                    <button type="submit">Go</button>
+                </form>
+            </div>
+
+</div>
+
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.js"></script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function(){
+                Swal.fire({
+                    icon: "{{ 'error' if category == 'error' else 'info' if category == 'info' else 'success' if category=='success' else 'warning' }}",
+                    title: "{{ category.capitalize() }}",
+                    text: "{{ message }}"
+                });
+            })
+        </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+
+
+

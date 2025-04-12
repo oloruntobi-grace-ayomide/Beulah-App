@@ -1,0 +1,7 @@
+{% extends 'error/error_templates.html' %}
+
+{% block error_msg %}
+        <h5>Whoa there! 🐢 Slow down!</h5>
+       <p>You're making too many requests in a short period. Take a breather and try again soon.</p>
+       <a href="{{url_for('home')}}">Go To Home</a>  
+{% endblock error_msg %}

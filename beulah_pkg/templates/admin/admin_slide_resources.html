@@ -1,0 +1,128 @@
+{% extends 'admin/admin_template.html '%}
+
+{% block title %}Slide Resources - Beulah Foundation for Christ{% endblock title %}
+
+
+{% block content %}
+    <!-- <div class="row filter-parent-container">
+        <div class="col-12 filter-container">
+
+            <div class="add-resource-div">
+                <a href="{{url_for('add_slide_resource')}}" class="link-1">Add New Slide</a>
+            </div>
+
+        </div>
+    </div> -->
+
+    <div class="row mt-5">
+        <div class="col-12 table-wrapper">
+
+            <table class="table">
+
+                <thead>
+                    <tr>
+                    <th class="loop-num">
+                        <h5>
+                            #
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>Image</h5>
+                    </th>
+                    <th>
+                        <h5>Title</h5>
+                    </th>
+                    
+                    <th>
+                        <h5>Comments</h5>
+                    </th>
+
+                    <th>
+                        <h5>Date Updated</h5>
+                    </th>
+
+                    <th>
+                        <h5>Edit</h5>
+                    </th>
+
+                    <th>
+                        <h5>View</h5>
+                    </th>
+
+                    </tr>
+                    
+                </thead>
+
+                <tbody>
+                    {% if slide_resources  %}
+                        {% for resource, slide, comment_count in slide_resources  %}
+                            <tr id="slide-{{slide.resource_id}}">
+                                <td class="loop-num">
+                                    <p>{{loop.index }}</p>
+                                </td>
+
+                                <td class="min-width special-td">
+                                    <img src="{{url_for('static', filename=slide.slide_image)}}" class="d-block image-fluid" width="100" height="50" alt="#{{loop.index}}">
+                                </td>
+
+                                <td class="min-width special-td">
+                                    <p>
+                                        {% if resource.resource_title|length > 17 %}
+                                            {{ resource.resource_title[0:17] }}...
+                                        {% else %}
+                                            {{ resource.resource_title }}
+                                        {% endif %}
+                                    </p>
+                                </td>
+
+                                <td class="min-width">
+                                    <p>
+                                        <i class="fa-solid fa-comment"></i>{% if comment_count != 0 %} {{comment_count}} {% else %} No comments {% endif %}
+                                    </p>
+                                </td>
+
+                                <td class="min-width">
+                                    <p>{{resource.resource_updated_date.strftime('%d-%b-%Y')}}</p>
+                                </td>
+                                
+                                <td class="edit-action">
+                                    <p class="pointer"><a href="{{url_for('edit_slide_resource', id=resource.resource_id)}}"><i class="fa-regular fa-pen-to-square"></i> Edit</a></p>
+                                </td>
+
+                                <td class="view-action">
+                                    <p class="pointer"><a href="{{url_for('dynamic_slides', id=resource.resource_id)}}"><i class="fa-regular fa-eye"></i> View</a></p>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center"><p>No Slides Found</p></td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">No Slides Found</td>
+                        </tr>
+                    {% endif %}
+                
+                </tbody>
+                
+            </table>
+
+        </div>
+    </div>
+    
+{% endblock content %}
+
+
+                           
+
+
+
+
+
+
+       
+   
+    
+ 
+      
