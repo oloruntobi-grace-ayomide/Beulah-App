@@ -1,7 +1,7 @@
 import os, secrets
 import logging
 from datetime import datetime
-from flask import Flask,render_template,redirect,request,abort,flash,url_for,session,jsonify
+from flask import Flask,render_template,redirect,request,flash,url_for,session,jsonify
 from werkzeug.utils import secure_filename
 from functools import wraps
 from werkzeug.security import check_password_hash,generate_password_hash

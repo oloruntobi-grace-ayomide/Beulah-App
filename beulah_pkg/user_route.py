@@ -166,7 +166,7 @@ def contact_us():
 
              # Send email to admin
             try:
-                admin_email = "ayomigrace291@gmail.com"
+                admin_email = "beufound@gmail.com"
                 msg = Message(
                     subject="New Contact Us Form Submission",
                     sender=app.config['MAIL_DEFAULT_SENDER'],
