@@ -16,6 +16,7 @@ load_dotenv()
 
 def create_app():
     app=Flask(__name__,instance_relative_config=True)
+    application = app
     app.config.from_pyfile('config.py', silent=True)
 
     env = os.getenv('FLASK_ENV', 'development')
@@ -32,13 +33,13 @@ def create_app():
         app.config.update(
             TESTING=True,
             DEBUG=True,
-            SQLALCHEMY_DATABASE_URI='mysql+mysqlconnector://root@127.0.0.1/beulahapp'
+            SQLALCHEMY_DATABASE_URI='mysql+mysqlconnector://root@127.0.0.1/beulahappdb'
         )
     else:
         # Override specific settings for development (optional)
         app.config.update(
             DEBUG=True,
-            SQLALCHEMY_DATABASE_URI='mysql+mysqlconnector://root@127.0.0.1/beulahapp'
+            SQLALCHEMY_DATABASE_URI='mysql+mysqlconnector://root@127.0.0.1/beulahappdb'
         )
 
 
