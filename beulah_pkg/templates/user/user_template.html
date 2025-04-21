@@ -65,7 +65,7 @@
     <noscript>
         <link rel="stylesheet" href="{{url_for('static', filename='assets/bootstrap/css/bootstrap.min.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='assets/fa/css/all.min.css')}}">
-        <link rel="stylesheet" href="{{url_for('static', filename='css_folder/user_stylesheet.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css_folder/user_stylesheet.min.css')}}">
     </noscript>
 
 
@@ -163,7 +163,6 @@
                     <div class="col-12 col-md-4 socials">
                         <p class="social-icons">
                             <span><a href="https://www.facebook.com/BeulahFoundationforChrist" target="_blank" title="Follow us on Facebook"><i class="fa-brands fa-facebook-f"></i></a></span>
-                            <span><a href="https://wa.me/2348023071460" target="_blank" title="Chat us on WhatsAPP"><i class="fa-brands fa-whatsapp"></i></a></span>
                             <span><a href="https://www.youtube.com/@beulahfoundationforchrist5834" target="_blank" title="Subscribe to our YouTube Channel"><i class="fa-brands fa-youtube"></i></a></span>
                             <span><a href="https://beulahfoundationforchrist.blogspot.com/" target="_blank" title="Follow our Blog"><i class="fa-brands fa-blogger"></i></a></a></span>
                         </p>
@@ -180,7 +179,7 @@
 
     <!-- Javascripts/jQuery starts here -->
     <script defer src="{{url_for('static',filename='assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-    <script defer src="{{url_for('static', filename='javascript_folder/user_script.min.js')}}"></script>
+    <script src="{{url_for('static', filename='javascript_folder/user_script.min.js')}}"></script>
     <script defer src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
     {% block script %}{% endblock script %}

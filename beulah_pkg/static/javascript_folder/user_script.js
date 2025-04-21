@@ -39,12 +39,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     AOS.init({
-        duration:1000, 
+        offset: 80,
+        delay: 100,
+        duration: 600,
+        easing: 'ease-in-out-cubic',
         once: true,
-        easing: 'ease-in-out'
+        mirror: false,
+        anchorPlacement: 'top-bottom' 
     });
-
-
+     
 
     let lastScrollTop = 0;
     const nav = document.querySelector(".all-nav");

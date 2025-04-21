@@ -41,6 +41,7 @@
         </div>
         
     </div>
+    
 
     <!-- Welcome to the family message ends here -->
 
@@ -49,7 +50,7 @@
 
     {% if slides %}
 
-    <div class="row slides-parent parent" data-aos="fade-up">
+    <div class="row slides-parent parent" data-aos="fade-up" data-aos-delay="200">
 
         <div class="col-12">
 
@@ -98,7 +99,7 @@
 
     
     <!-- social media icons starts here -->
-    <div class="row social-media-container parent" data-aos="fade-up">
+    <div class="row social-media-container parent" data-aos="fade-up" data-aos-delay="300">
         <div class="col-12">
           <div class="content">
             <h3>Stay in the loop. Follow us on social media and dive into our awesome blogs!</h3>
@@ -117,6 +118,7 @@
 {% endblock content %}
 {% block script%}
 <script>
+    
 document.addEventListener("DOMContentLoaded", function () {
     let hasAnimated = false; // Flag to track if animation has run
 

@@ -24,7 +24,7 @@ button{
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family: "Raleway", sans-serif;
+	font-family: "Raleway", sans-serif !important;
 	font-weight:500;
 	word-spacing:1.5px;
 }
@@ -177,7 +177,6 @@ to {
 animation: CustomZoomIn 1.5s ease-in-out forwards;
 }
 
-
 /* Custom styling for sweetalerts starts here */
 
 .swal2-html-container {
@@ -261,7 +260,9 @@ animation: CustomZoomIn 1.5s ease-in-out forwards;
 
 .search-box i{
 	display: block;
-	line-height: 25px
+	line-height: 25px;
+	cursor: pointer;
+	font-size: 15.5px;
 }
 
 .all-nav .nav-control {
@@ -278,28 +279,21 @@ animation: CustomZoomIn 1.5s ease-in-out forwards;
 	transition: transform 0.3s ease-in-out;
 }
 
-.nav-link, .drop-link, .search-box i{
+.nav-link, .drop-link{
     font-size: 15.5px;
     font-weight:600;
-	font-family: "Raleway", sans-serif;
+	font-family: "Nunito", sans-serif;
 }
 
 .nav-link, .search-box i{
-	color: #6D0F15;
-}
-
-.search-box i {
-	cursor: pointer;
+	color: #6D0F15 ;
+	padding:10px 5px 20px 5px !important;
+    border-bottom: 2px solid transparent;
+    transition:background 0.4s ease-in-out, border-color 0.4s ease-in-out;
 }
 
 .main-banner .nav-link, .main-banner .search-box i{
 	color: #ffffff;
-}
-
-.nav-link, .search-box i{
-	padding:10px 5px 20px 5px !important;
-    border-bottom: 2px solid transparent;
-    transition:background 0.4s ease-in-out, border-color 0.4s ease-in-out;
 }
 
 .nav-link:hover, .search-box i:hover, .nav-link.active, .nav-link.show, .nav-link:focus, .search-box i:focus {
@@ -340,7 +334,7 @@ animation: CustomZoomIn 1.5s ease-in-out forwards;
 	display: none;
 	align-items: center;
 	justify-content: center;
-	width:60%;
+	width:80%;
 	z-index:1000;
 	opacity: 0;
 	transition: opacity 0.5s linear;
@@ -393,21 +387,19 @@ animation: CustomZoomIn 1.5s ease-in-out forwards;
     transition: background 0.5s ease-in-out;
 }
 
-.sticky-nav .nav-link, 
-.sticky-nav .search-box i {
+.sticky-nav .nav-link, .sticky-nav .nav-link.show, .sticky-nav .search-box i {
     color: #6D0F15;
 }
 
-
 .sticky-nav .nav-link:hover, 
-.sticky-nav .search-box:hover,
+.sticky-nav .nav-link.show, 
+.sticky-nav .search-box i:hover,
 .sticky-nav .nav-link:focus, 
-.sticky-nav .search-box:focus {
+.sticky-nav .search-box i:focus {
     color: #6D0F15 !important;
     border-bottom-color: #6D0F15;
     background: rgba(109, 15, 21, 0.1);
 }
-
 
 @keyframes slideDown {
     from {
@@ -418,9 +410,6 @@ animation: CustomZoomIn 1.5s ease-in-out forwards;
     }
 }  
 /* Navigation styling ends here */
-
-
-
 
 
 /* Main banner/hero section styling starts here */
@@ -445,6 +434,7 @@ animation: CustomZoomIn 1.5s ease-in-out forwards;
     left: 0;
     width: 100%;
     height: 100%;
+	/* background-color: rgba(120, 0, 15, 0.60); */
 	background: linear-gradient(to bottom right, rgba(109,15,21,0.75) 60%, rgba(255,255,255,0.96) 100%);
 	background-size: 200% 100%;
 }
@@ -459,7 +449,7 @@ animation: CustomZoomIn 1.5s ease-in-out forwards;
 #name, #extention, #motto {
 	color:#fff;
 	letter-spacing:1px;
-	font-family: "Nunito", sans-serif;
+	font-family: "Nunito", sans-serif !important;
 	visibility: hidden; 
   	transition: opacity 1s ease;
 }
@@ -482,14 +472,6 @@ animation: CustomZoomIn 1.5s ease-in-out forwards;
 }
 
 /* Main banner/hero section styling ends here */
-
-
-/* this is to give kinda glass effect to some divs */
-.about-page-content, .contact-page-content, .slides-parent, .partnership-page-content, .upcoming-page-content, 
-.reading-resource-parent, .resources-container, .comment-resource-parent {
-	backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-}
 
 
 /* Welcome to the family message starts here  */
@@ -1830,7 +1812,6 @@ p.not-found{
 }
 
 @media screen and (max-width:991px) {
-
 .all-nav .nav-control {
 	display: flex;
 	justify-content: center;
@@ -1845,6 +1826,10 @@ p.not-found{
 	width: 37px;
 	z-index: 999;
 
+}
+
+.search-box i{
+	margin-top: 6px;
 }
 			
 .hamburger .line {
@@ -1992,7 +1977,9 @@ body.nav-open {
 }
 
 @media screen and (max-width:991px) and (min-width:769px) {
-
+.all-nav {
+	max-height:90px;
+}
 .navbar-logo img{
 	width:40px;
 }
@@ -2120,7 +2107,9 @@ body.nav-open {
 }
 
 @media screen and (max-width:768px) and (min-width:481px) {
-
+.all-nav {
+	max-height:85px;
+}
 .navbar-logo img{
 	width:40px;
 }
@@ -2369,6 +2358,10 @@ font-size:25px;
 }
 
 @media screen and (max-width:480px) {
+.all-nav {
+	max-height:80px;
+}
+
 .navbar-logo img{
 	width:40px;
 }
@@ -2709,6 +2702,9 @@ p.not-found{
 }
 
 @media screen and (max-width:380px) {
+.all-nav {
+	max-height:75px;
+}
 
 .navbar-logo img{
 	width:35px;
