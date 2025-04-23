@@ -1,0 +1,110 @@
+{% extends 'admin/admin_template.html '%}
+
+{% block title %}Admin dashboard - Beulah Foundation for Christ{% endblock title %}
+
+
+{% block content %}
+<div class="row page-titles">
+
+    <div class="col-md-6 col-sm-12 p-md-0">
+        <div class="welcome-text">
+            <h4>Hi, welcome back!</h4>
+        </div>
+    </div>
+
+
+
+    <div class="col-md-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-none d-md-flex">
+        <nav class="breadcrumb-nav" aria-label="breadcrumb">
+
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{url_for('home')}}">Home</a></li>
+                <li class="breadcrumb-item active"><a href="{{url_for('admin_dashboard')}}">Dashboard</a></li>
+            </ol>
+            
+        </nav>
+      
+    </div>
+
+</div>
+
+<div class="row stat-widget-parent">
+
+    <div class="col-lg-3 col-md-6 col-sm-12">
+
+        <div class="stat-widget-one stat-one">
+            <div class="stat-icon me-3">
+                <i class="fa-solid fa-hands-praying"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-text">Prayer Request</div>
+                <div class="stat-digit fs-4">
+                    {% if prayer_requests %}
+                        <p>{{prayer_requests}}</p> 
+                    {% else %}
+                    <p>0</p>
+                    {%endif%}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-3 col-md-6 col-sm-12">
+   
+        <div class="stat-widget-one stat-two">
+            <div class="stat-icon me-3">
+                <i class="fa-solid fa-calendar"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-text">Upcoming Events</div>
+                <div class="stat-digit fs-4">
+                {% if upcoming_events %}
+                    <p>{{upcoming_events}}</p>
+                {% else %}
+                <p>0</p>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    
+    </div>
+
+
+    <div class="col-lg-3 col-md-6 col-sm-12">
+
+        <div class="stat-widget-one stat-three">
+            <div class="stat-icon me-3">
+                <i class="fa fa-user"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-text">Subscribers</div>
+                <div class="stat-digit fs-4">
+                {% if subscribers %}
+                    <p>{{ subscribers }}</p>
+                {% else %}
+                <p>0</p>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    
+    </div>
+</div>
+    
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+       
+   
+    
+ 
+      

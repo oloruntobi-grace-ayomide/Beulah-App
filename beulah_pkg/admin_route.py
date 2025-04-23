@@ -140,7 +140,7 @@ def admin_dashboard(admin_online):
     subscribers = db.session.query(NewsletterSubscriber).count()
     upcoming_events = db.session.query(Event).count()
     prayer_requests = db.session.query(PrayerRequest).count()
-    return render_template('admin/admin_template.html', subscribers=subscribers, upcoming_events=upcoming_events, prayer_requests=prayer_requests,admin_online=admin_online)
+    return render_template('admin/admin_index.html', subscribers=subscribers, upcoming_events=upcoming_events, prayer_requests=prayer_requests,admin_online=admin_online)
 
 
 @app.route('/admin/calendar/')
