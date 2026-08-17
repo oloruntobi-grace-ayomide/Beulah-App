@@ -58,8 +58,8 @@
           <section class="overview-tab-header counselling-form-padding">
             <h1>You don't have to carry this alone.</h1>
             <p>
-              We offers free, confidential online counseling
-              sessions rooted in faith and genuine care. No accounts, no
+              We offer free and confidential online counseling
+              sessions, rooted in the word of God and genuine care. No accounts, no
               pressure - just a safe space to be heard.
             </p>
             <div class="d-flex flex-wrap gap-4 quick-links">
@@ -1139,134 +1139,134 @@
     }
 
     // ── Donate tab ────────────────────────────────────────────────────────
-    const gatewayButtons = document.querySelectorAll('.gateway-btn');
-    const donationGatewayInput = document.getElementById('donationGateway');
-    document.querySelectorAll('.gateway-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        document.querySelectorAll('.gateway-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        donationGatewayInput.value = this.dataset.gateway;
-      });
-    });
+    // const gatewayButtons = document.querySelectorAll('.gateway-btn');
+    // const donationGatewayInput = document.getElementById('donationGateway');
+    // document.querySelectorAll('.gateway-btn').forEach(function (btn) {
+    //   btn.addEventListener('click', function () {
+    //     document.querySelectorAll('.gateway-btn').forEach(b => b.classList.remove('active'));
+    //     this.classList.add('active');
+    //     donationGatewayInput.value = this.dataset.gateway;
+    //   });
+    // });
   
-    const AMOUNT_PRESETS = {
-      NGN: [1000, 2500, 5000, 10000, 25000],
-      USD: [10, 25, 50, 100, 250],
-      GBP: [10, 25, 50, 100, 250],
-      EUR: [10, 25, 50, 100, 250],
-      GHS: [50, 100, 250, 500, 1000],
-      KES: [500, 1000, 2500, 5000, 10000]
-    };
+    // const AMOUNT_PRESETS = {
+    //   NGN: [1000, 2500, 5000, 10000, 25000],
+    //   USD: [10, 25, 50, 100, 250],
+    //   GBP: [10, 25, 50, 100, 250],
+    //   EUR: [10, 25, 50, 100, 250],
+    //   GHS: [50, 100, 250, 500, 1000],
+    //   KES: [500, 1000, 2500, 5000, 10000]
+    // };
  
-    const amountPresetsContainer = document.getElementById('amountPresets');
-    const customAmountInput = document.getElementById('donationCustomAmount');
-    const currencySelect = document.getElementById('donationCurrency');
-    let selectedPresetAmount = null;
+    // const amountPresetsContainer = document.getElementById('amountPresets');
+    // const customAmountInput = document.getElementById('donationCustomAmount');
+    // const currencySelect = document.getElementById('donationCurrency');
+    // let selectedPresetAmount = null;
  
-    function renderAmountPresets(currency) {
-      const presets = AMOUNT_PRESETS[currency] || AMOUNT_PRESETS.NGN;
-      amountPresetsContainer.innerHTML = '';
-      customAmountInput.value = '';
+    // function renderAmountPresets(currency) {
+    //   const presets = AMOUNT_PRESETS[currency] || AMOUNT_PRESETS.NGN;
+    //   amountPresetsContainer.innerHTML = '';
+    //   customAmountInput.value = '';
  
-      presets.forEach(function (amount, index) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'amount-btn' + (index === 0 ? ' active' : '');
-        btn.dataset.amount = amount;
-        btn.textContent = amount.toLocaleString();
-        btn.addEventListener('click', function () {
-          document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          selectedPresetAmount = amount;
-          customAmountInput.value = '';
-        });
-        amountPresetsContainer.appendChild(btn);
-      });
+    //   presets.forEach(function (amount, index) {
+    //     const btn = document.createElement('button');
+    //     btn.type = 'button';
+    //     btn.className = 'amount-btn' + (index === 0 ? ' active' : '');
+    //     btn.dataset.amount = amount;
+    //     btn.textContent = amount.toLocaleString();
+    //     btn.addEventListener('click', function () {
+    //       document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+    //       btn.classList.add('active');
+    //       selectedPresetAmount = amount;
+    //       customAmountInput.value = '';
+    //     });
+    //     amountPresetsContainer.appendChild(btn);
+    //   });
  
-      selectedPresetAmount = presets[0];
-    }
+    //   selectedPresetAmount = presets[0];
+    // }
  
-    currencySelect.addEventListener('change', function () {
-      renderAmountPresets(this.value);
-    });
+    // currencySelect.addEventListener('change', function () {
+    //   renderAmountPresets(this.value);
+    // });
  
-    renderAmountPresets(currencySelect.value); 
+    // renderAmountPresets(currencySelect.value); 
  
-    customAmountInput.addEventListener('input', function () {
-      if (this.value) {
-        selectedPresetAmount = null;
-        document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
-      }
-    });
-    const donationAnonymous = document.getElementById('donationAnonymous');
-    const donorFields = document.getElementById('donorFields');
-    donationAnonymous.addEventListener('change', function () {
-      donorFields.style.display = this.checked ? 'none' : 'block';
-    });
+    // customAmountInput.addEventListener('input', function () {
+    //   if (this.value) {
+    //     selectedPresetAmount = null;
+    //     document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+    //   }
+    // });
+    // const donationAnonymous = document.getElementById('donationAnonymous');
+    // const donorFields = document.getElementById('donorFields');
+    // donationAnonymous.addEventListener('change', function () {
+    //   donorFields.style.display = this.checked ? 'none' : 'block';
+    // });
 
-    const donationError = document.getElementById('donationError');
-    const submitDonationBtn = document.getElementById('submitDonationBtn');
+    // const donationError = document.getElementById('donationError');
+    // const submitDonationBtn = document.getElementById('submitDonationBtn');
 
-    submitDonationBtn.addEventListener('click', function () {
-      donationError.style.display = 'none';
+    // submitDonationBtn.addEventListener('click', function () {
+    //   donationError.style.display = 'none';
 
-      submitDonationBtn.disabled = true;
-      submitDonationBtn.textContent = 'Processing...';
+    //   submitDonationBtn.disabled = true;
+    //   submitDonationBtn.textContent = 'Processing...';
 
-      const amount = customAmountInput.value
-          ? parseFloat(customAmountInput.value)
-          : parseFloat(selectedPresetAmount);
+    //   const amount = customAmountInput.value
+    //       ? parseFloat(customAmountInput.value)
+    //       : parseFloat(selectedPresetAmount);
 
-      const isAnonymous = donationAnonymous.checked;
-      const name = document.getElementById('donorName').value.trim();
-      const email = document.getElementById('donorEmail').value.trim();
+    //   const isAnonymous = donationAnonymous.checked;
+    //   const name = document.getElementById('donorName').value.trim();
+    //   const email = document.getElementById('donorEmail').value.trim();
 
-      if (!amount || amount < 1) {
-          donationError.textContent = 'Please choose or enter a valid amount.';
-          donationError.style.display = 'block';
+    //   if (!amount || amount < 1) {
+    //       donationError.textContent = 'Please choose or enter a valid amount.';
+    //       donationError.style.display = 'block';
 
-          submitDonationBtn.disabled = false;
-          submitDonationBtn.textContent = 'Donate 💙';
-          return;
-      }
+    //       submitDonationBtn.disabled = false;
+    //       submitDonationBtn.textContent = 'Donate 💙';
+    //       return;
+    //   }
 
-      if (!isAnonymous && (!name || !email)) {
-          donationError.textContent = 'Please provide your name and email, or donate anonymously.';
-          donationError.style.display = 'block';
+    //   if (!isAnonymous && (!name || !email)) {
+    //       donationError.textContent = 'Please provide your name and email, or donate anonymously.';
+    //       donationError.style.display = 'block';
 
-          submitDonationBtn.disabled = false;
-          submitDonationBtn.textContent = 'Donate 💙';
-          return;
-      }
+    //       submitDonationBtn.disabled = false;
+    //       submitDonationBtn.textContent = 'Donate 💙';
+    //       return;
+    //   }
 
-      postJSON('/book/donate/init/', {
-        gateway: donationGatewayInput.value,
-        amount: amount,
-        currency: document.getElementById('donationCurrency').value,
-        name: isAnonymous ? '' : name,
-        email: isAnonymous ? '' : email,
-        is_anonymous: isAnonymous,
-        website: document.getElementById('donateWebsite').value,
-        turnstile_token: turnstile.getResponse(document.getElementById('turnstileDonate'))
-      }).then(({ ok, data }) => {
-        if (!ok || !data.success) {
-          submitDonationBtn.disabled = false;
-          submitDonationBtn.textContent = 'Donate 💙';
-          donationError.textContent = data.message || 'Something went wrong. Please try again.';
-          donationError.style.display = 'block';
-          turnstile.reset(document.getElementById('turnstileDonate'));
-          return;
-        }
-        window.location.href = data.checkout_url;
-      })
-      .catch(() => {
-        submitDonationBtn.disabled = false;
-        submitDonationBtn.textContent = 'Donate 💙';
+    //   postJSON('/book/donate/init/', {
+    //     gateway: donationGatewayInput.value,
+    //     amount: amount,
+    //     currency: document.getElementById('donationCurrency').value,
+    //     name: isAnonymous ? '' : name,
+    //     email: isAnonymous ? '' : email,
+    //     is_anonymous: isAnonymous,
+    //     website: document.getElementById('donateWebsite').value,
+    //     turnstile_token: turnstile.getResponse(document.getElementById('turnstileDonate'))
+    //   }).then(({ ok, data }) => {
+    //     if (!ok || !data.success) {
+    //       submitDonationBtn.disabled = false;
+    //       submitDonationBtn.textContent = 'Donate 💙';
+    //       donationError.textContent = data.message || 'Something went wrong. Please try again.';
+    //       donationError.style.display = 'block';
+    //       turnstile.reset(document.getElementById('turnstileDonate'));
+    //       return;
+    //     }
+    //     window.location.href = data.checkout_url;
+    //   })
+    //   .catch(() => {
+    //     submitDonationBtn.disabled = false;
+    //     submitDonationBtn.textContent = 'Donate 💙';
 
-        donationError.textContent = 'Network error. Please try again.';
-        donationError.style.display = 'block';
-    });
-    });
+    //     donationError.textContent = 'Network error. Please try again.';
+    //     donationError.style.display = 'block';
+    // });
+    // });
    
     // ── FAQ accordion ───────────────────────────────────────────────────
     document.querySelectorAll('.faq-question').forEach(function (btn) {

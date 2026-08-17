@@ -59,7 +59,7 @@
 
     <!-- Non-critical stylesheets (loaded asynchronously) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" media="print" onload="this.media='all'">
 
     <!-- Noscript fallback for critical styles -->
     <noscript>
@@ -105,7 +105,7 @@
 
                 <div class="counselling-prompt-content">
                     <h2 id="counselling-prompt-title">Need someone to talk with?</h2>
-                    <p>If you are interested in counselling, you can book a free session directly on our site.</p>
+                    <p>If you are interested in faith-based counselling, you can book a free session directly on our site.</p>
                 </div>
 
                 <a href="{{url_for('book_session')}}" class="counselling-prompt-link" id="counselling-prompt-link">Book Free Counselling</a>
@@ -216,7 +216,7 @@
     <!-- Javascripts/jQuery starts here -->
     <script defer src="{{url_for('static',filename='assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{url_for('static', filename='javascript_folder/user_script.min.js')}}"></script>
-    <script defer src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const year = document.getElementById("year");

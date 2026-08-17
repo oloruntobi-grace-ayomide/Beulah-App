@@ -20,7 +20,7 @@ EMAIL_REGEX = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
 SESSION_DURATION_MINUTES = 60
 
 # ── Payment gateway config (set these in your .env) ──────────────────────
-APP_URL = os.environ.get('APP_URL', 'http://localhost:5000')
+APP_URL = os.environ.get('APP_URL', 'http://localhost:8060')
 PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
