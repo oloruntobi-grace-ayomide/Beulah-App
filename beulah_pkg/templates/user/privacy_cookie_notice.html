@@ -1,0 +1,53 @@
+{% extends 'user/user_template.html' %}
+
+{% block title %}Privacy & Cookie Notice - Beulah Foundation for Christ{% endblock title %}
+
+{% block content %}
+
+{% include 'user/navigation.html' %}
+
+<div class="row pages-banner parent">
+    <div class="col-12">
+        <h1>Privacy & Cookie Notice</h1>
+    </div>
+</div>
+
+<div class="row parent privacy-cookie-page">
+    <div class="col-12 col-lg-9 mx-auto">
+        <div class="privacy-cookie-content">
+            <h2>How we use cookies and similar technologies</h2>
+            <p>
+                We use necessary cookies and similar technologies to keep this website secure,
+                remember basic preferences, and improve your experience.
+            </p>
+
+            <h3>Necessary website storage</h3>
+            <p>
+                Some cookies are needed for security, form protection, session handling, and basic
+                website features. These help the site work correctly and are not used for advertising.
+            </p>
+
+            <h3>Basic preferences</h3>
+            <p>
+                We may remember simple choices in your browser, such as whether you have already seen
+                a notice or counselling prompt. This helps avoid showing the same prompt repeatedly.
+            </p>
+
+            <h3>Third-party services</h3>
+            <p>
+                We may use trusted services such as Cloudflare Turnstile for bot protection and payment
+                providers such as Paystack or Stripe when donations are available. These services may
+                process technical information needed to provide their service.
+            </p>
+
+            <h3>Your choice</h3>
+            <p>
+                You can clear cookies and site data from your browser settings at any time. If we later
+                add analytics or marketing tracking, we should ask for a clearer opt-in choice before
+                those non-essential tools are used.
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -91,6 +91,29 @@
         </div>
     
     </div>
+
+
+    <div class="col-lg-3 col-md-6 col-sm-12">
+
+        <a href="{{url_for('admin_audit_logs')}}" class="text-decoration-none">
+            <div class="stat-widget-one stat-four">
+                <div class="stat-icon me-3">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-text">Audit Logs</div>
+                    <div class="stat-digit fs-4">
+                    {% if audit_logs %}
+                        <p>{{ audit_logs }}</p>
+                    {% else %}
+                    <p>0</p>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+    
+    </div>
 </div>
     
 

@@ -1,0 +1,47 @@
+{% extends "user/user_template.html" %}
+
+{% block title %}Thank You for Your Donation - Beulah Foundation for Christ{% endblock %}
+
+{% block content %}
+<div class="contact-form">
+  <div class="form-card text-center" style="max-width:600px;">
+    <div class="mb-3">
+      <i class="fa-solid fa-heart fa-2x" style="color:#E27C82;"></i>
+    </div>
+    <h1 style="color:#68764b;">Thank you so much!</h1>
+    <p class="text-muted">
+      Your generous donation helps Beulah Foundation for Christ continue its ministry of evangelism and discipleship.
+    </p>
+
+    {% if donation %}
+    <div class="text-start bg-light rounded p-3 my-4">
+      <div class="d-flex justify-content-between">
+        <span class="text-muted">Amount</span>
+        <strong>{{ donation.donation_currency }} {{ '%.2f'|format(donation.donation_amount) }}</strong>
+      </div>
+      <div class="d-flex justify-content-between mt-1">
+        <span class="text-muted">Status</span>
+        <strong class="{{ 'text-success' if donation.donation_status == 'completed' else 'text-warning' }}">
+          {{ donation.donation_status|capitalize }}
+        </strong>
+      </div>
+    </div>
+    <p class="text-muted small">
+      {% if donation.donation_email %}
+        A receipt has been sent to {{ donation.donation_email }}.
+      {% else %}
+        If you provided an email, a receipt is on its way.
+      {% endif %}
+    </p>
+    {% else %}
+    <p class="text-muted small">
+      We couldn't find that transaction - but if your payment went through, you'll still receive a receipt by email shortly.
+    </p>
+    {% endif %}
+
+    <a href="{{ url_for('book_session') }}" class="btn mt-3 button_submit ">
+      Back to Booking Page
+    </a>
+  </div>
+</div>
+{% endblock content %}

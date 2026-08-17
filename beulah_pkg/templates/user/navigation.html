@@ -33,15 +33,8 @@
                     <a class="nav-link" href="{{url_for('about')}}">About</a>
                     </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Spiritual Resources
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item drop-link" href="{{url_for('reading_resources')}}">Reading Resources</a></li>
-                            <li><a class="dropdown-item drop-link" href="{{url_for('audio_resources')}}">Audios</a></li>
-                        </ul>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('reading_resources')}}">Messages</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('audio_resources')}}">Audios</a></li>
 
                     <li class="nav-item">
                     <a class="nav-link" href="{{url_for('prayer_request')}}">Prayer Request</a>
@@ -49,6 +42,10 @@
 
                     <li class="nav-item">
                     <a class="nav-link" href="{{url_for('partnership')}}">Partnership</a>
+                    </li>
+
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('book_session')}}">Counselling</a>
                     </li>
 
                     <li class="nav-item">

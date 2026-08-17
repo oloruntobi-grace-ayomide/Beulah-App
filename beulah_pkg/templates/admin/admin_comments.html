@@ -5,7 +5,14 @@
 
 {% block content %}
 
-    
+    <div class="admin-table-card">
+        <div class="admin-table-card-header">
+            <div>
+                <h2 class="admin-table-card-title">Comments</h2>
+                <p class="admin-table-card-description">Review, filter, view, and delete comments across message and audio resources.</p>
+            </div>
+        </div>
+
     <div class="row filter-parent-container">
         <div class="col-12 filter-container">
 
@@ -50,56 +57,6 @@
             </div>
 
 
-            <div class="pagination-container">
-
-                <!-- Pagination Controls -->
-                
-                <nav aria-label="...">
-                    <ul class="pagination">
-                    {% if pagination%}
-                    {% if pagination.has_prev %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ base_url }}?page={{ pagination.prev_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}"><i class="fa-solid fa-angle-left"></i></a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link"><i class="fa-solid fa-angle-left"></i></span>
-                        </li>
-                    {% endif %}
-                    {%endif%}
-
-                    
-
-                    {% if pagination %}
-                        {% for page_num in pagination.iter_pages(left_edge=0, right_edge=0, left_current=0, right_current=0) %}
-                        
-                        {% if page_num %}
-                            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
-                                <a class="page-link" href="{{ base_url }}?page={{ page_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}">{{ page_num }}</a>
-                            </li>
-                        {% endif %}
-
-                        {% endfor %}
-                    {% endif%}
-
-
-
-                    {% if pagination %}
-                    {% if pagination.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ base_url }}?page={{ pagination.next_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}"><i class="fa-solid fa-angle-right"></i></a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link"><i class="fa-solid fa-angle-right"></i></span>
-                        </li>
-                    {% endif %}
-                    {% endif %}
-                    </ul>
-                </nav>
-
-            </div>
-
         </div>
 
     </div>
@@ -137,7 +94,7 @@
                         <h5>View</h5>
                     </th>
 
-                    <th>
+                    <th class="sticky-action">
                         <h5>Delete</h5>
                     </th>
 
@@ -188,7 +145,7 @@
                                 <p class="pointer view-comment-btn"  data-id="{{comment.comment_id}}"><i class="fa-regular fa-eye"></i>View</p>
                             </td>
 
-                            <td class="action">
+                            <td class="action sticky-action">
                                 <p class="pointer delete-comment-btn" data-id="{{comment.comment_id}}"> <i class="fa-regular fa-trash-can"></i></p>
                             </td>
                             </tr>
@@ -203,6 +160,10 @@
             </table>
 
         </div>
+    </div>
+    {% set pagination_label = 'comments' %}
+    {% set pagination_query = 'sortOrder=' ~ request.args.get('sortOrder', 'desc') ~ '&month=' ~ request.args.get('month', 'all') %}
+    {% include 'admin/_pagination_footer.html' %}
     </div>
 
 

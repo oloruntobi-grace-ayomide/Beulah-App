@@ -20,29 +20,26 @@
 
     <div class="row contact-page-content">
 
-
         <div class="col-md-3 hexagon" data-aos="fade-up">
             <div class="hexagon-content">
                 <p><i class="fa-solid fa-location-dot"></i><p>
-                <p>No 2 Libya Crescent, off Libya Road <br>Barnawa GRA, Phase 1, Kaduna, Nigeria.</p>
+                <p>Beulah Hall, 12 Harrison road, off Firoro Road, Angwan Boro, Sabon Tasha, Kaduna, Nigeria.</p>
             </div>
         </div>
         <div class="col-md-3 hexagon" data-aos="fade-up">
             <div class="hexagon-content">
                 <p><i class="fa-solid fa-phone-volume"></i></p>
-                <p><span>+234 8023071460</span><br><span>+234 7034138208</span></p>
+                <p><span>+234 8023071460</span><span>+234 7034138208</span></p>
             </div>
         </div>
         <div class="col-md-3 hexagon" data-aos="fade-up">
             <div class="hexagon-content">
                 <p><i class="fa-solid fa-envelope"></i></p>
-                <p><a href="mailto:beufoundation@yahoo.com">beufoundation@yahoo.com</a><br><a href="mailto:beufound@gmail.com">beufound@gmail.com</a><br><a href="mailto:efeyomi@gmail.com">efeyomi@gmail.com</a></p>
+                <p><a href="mailto:beufoundation@yahoo.com">beufoundation@yahoo.com</a><a href="mailto:beufound@gmail.com">beufound@gmail.com</a></p>
             </div>
         </div>
         
     </div>
-
-
 
     <div class="row contact-form" data-aos="fade-up">
 
@@ -67,6 +64,16 @@
                     <div class="input-style-1">
                     <textarea name="message" rows="8" placeholder="Message" required></textarea>
                     </div>
+
+                    <div class="input-style-1">
+                        <div id="turnstileContact" class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+                    </div>
+ 
+                    <div class="hp-field" aria-hidden="true">
+                        <label for="contactWebsite">Leave empty</label>
+                        <input type="text" name="website" id="contactWebsite" tabindex="-1" autocomplete="off">
+                    </div>
+ 
 
                     <button type="submit" class="btn button_submit">Submit Contact</button>
                 </form>
@@ -122,6 +129,8 @@
         formData.append('phone', phone)
         formData.append('email', email_address)
         formData.append('request', message)
+        formData.append('website', document.getElementById('contactWebsite').value)
+        formData.append('turnstile_token', turnstile.getResponse(document.getElementById('turnstileContact')))
         
 
         fetch(this.action, {
@@ -135,16 +144,18 @@
         .then(data => {
             if (data.success) {
                 alertSuccess('Form Submited', data.message)
-                contactForm .reset(); 
+                contactForm.reset();
+                turnstile.reset(document.getElementById('turnstileContact'));
             } else {
-                alertError('Oops', data.message )
+                alertError('Oops', data.message)
+                turnstile.reset(document.getElementById('turnstileContact'));
             }
             submitButton.disabled = false;
             submitButton.textContent = 'Submit';
         })
         .catch(error => {
-            console.error('Error:', error);
             alertError('Oops', 'An unexpected error occurred. Please try again later.');
+            turnstile.reset(document.getElementById('turnstileContact'));
             submitButton.disabled = false;
             submitButton.textContent = 'Submit';
         });

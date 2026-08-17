@@ -1,0 +1,141 @@
+{% extends "admin/admin_template.html" %}
+
+{% block title %}Donations — Admin{% endblock %}
+
+{% block content %}
+
+<div class="row g-3 mb-3">
+  <div class="col-md-3 col-6">
+    <div class="card-style text-center">
+      <h3 class="mb-0">{{ total_completed_count }}</h3>
+      <p class="text-muted small mb-0">Completed Donations</p>
+    </div>
+  </div>
+  {% for ct in currency_totals %}
+  <div class="col-md-3 col-6">
+    <div class="card-style text-center">
+      <h3 class="mb-0">{{ ct.currency }} {{ '{:,.2f}'.format(ct.total) }}</h3>
+      <p class="text-muted small mb-0">Total in {{ ct.currency }} ({{ ct.count }})</p>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-md-9 col-6">
+    <div class="card-style text-center">
+      <h3 class="mb-0">-</h3>
+      <p class="text-muted small mb-0">No completed donations yet.</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="admin-table-card">
+  <div class="admin-table-card-header">
+    <div>
+      <h2 class="admin-table-card-title">Donations</h2>
+      <p class="admin-table-card-description">Track donation records by donor, amount, gateway, payment status, and date.</p>
+    </div>
+  </div>
+
+<div class="row filter-parent-container">
+  <div class="col-12 filter-container">
+    <div class="filter-section">
+
+      <div class="select-style-1">
+        <div class="select-position">
+          <select class="form-select" id="filterGateway" style="min-width:150px; flex-shrink:0;">
+            <option value="">All Gateways</option>
+            <option value="paystack" {{ 'selected' if gateway == 'paystack' else '' }}>Paystack</option>
+            <option value="stripe" {{ 'selected' if gateway == 'stripe' else '' }}>Stripe</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="select-style-1">
+        <div class="select-position">
+          <select class="form-select" id="filterStatus" style="min-width:150px; flex-shrink:0;">
+            <option value="">All Statuses</option>
+            <option value="completed" {{ 'selected' if status == 'completed' else '' }}>Completed</option>
+            <option value="pending" {{ 'selected' if status == 'pending' else '' }}>Pending</option>
+            <option value="failed" {{ 'selected' if status == 'failed' else '' }}>Failed</option>
+            <option value="refunded" {{ 'selected' if status == 'refunded' else '' }}>Refunded</option>
+          </select>
+        </div>
+      </div>
+
+      <input type="date" id="filterDateFrom" class="form-control" value="{{ date_from }}" title="From date">
+      <input type="date" id="filterDateTo" class="form-control" value="{{ date_to }}" title="To date">
+
+      <button id="filter-donations" class="butt-1">Filter</button>
+      {% if gateway or status or date_from or date_to %}
+      <a href="{{ base_url }}" class="btn btn-sm btn-outline-secondary">Clear</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col table-wrapper">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="loop-num"><h5>#</h5></th>
+          <th><h5>Donor</h5></th>
+          <th><h5>Amount</h5></th>
+          <th><h5>Gateway</h5></th>
+          <th><h5>Status</h5></th>
+          <th><h5>Date</h5></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in donations %}
+        <tr>
+          <td class="loop-num"><p>{{ (pagination.page - 1) * pagination.per_page + loop.index }}</p></td>
+          <td>
+            {% if d.donation_is_anonymous %}
+              <span class="text-muted fst-italic">Anonymous</span>
+            {% else %}
+              <strong>{{ d.donation_name or '—' }}</strong><br>
+              <span class="text-muted small">{{ d.donation_email or '' }}</span>
+            {% endif %}
+          </td>
+          <td><strong>{{ d.donation_currency }} {{ '{:,.2f}'.format(d.donation_amount) }}</strong></td>
+          <td>{{ d.donation_gateway|capitalize }}</td>
+          <td>
+            <span class="badge" style="background:{{ donation_status_colors.get(d.donation_status, '#6c757d') }};">
+              {{ d.donation_status|capitalize }}
+            </span>
+          </td>
+          <td class="text-muted small">{{ d.donation_date_added.strftime('%b %d, %Y') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No donations found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% set pagination_label = 'donations' %}
+{% set pagination_query = 'gateway=' ~ gateway ~ '&status=' ~ status ~ '&date_from=' ~ date_from ~ '&date_to=' ~ date_to %}
+{% include 'admin/_pagination_footer.html' %}
+</div>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const baseUrl = "{{ base_url }}";
+
+  document.getElementById('filter-donations').addEventListener('click', function () {
+    const gateway = document.getElementById('filterGateway').value;
+    const status = document.getElementById('filterStatus').value;
+    const dateFrom = document.getElementById('filterDateFrom').value;
+    const dateTo = document.getElementById('filterDateTo').value;
+
+    const url = `${baseUrl}?page=1&gateway=${gateway}&status=${status}&date_from=${dateFrom}&date_to=${dateTo}`;
+    window.location.href = url;
+  });
+});
+</script>
+{% endblock script %}

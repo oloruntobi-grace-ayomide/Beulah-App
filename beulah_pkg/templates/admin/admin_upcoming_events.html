@@ -5,17 +5,17 @@
 
 {% block content %}
 
-    <div class="row filter-parent-container">
-        <div class="col-12 filter-container">
-
-            <div class="add-resource-div">
-                <a href="{{url_for('add_new_event')}}" class="link-1">Add New Event</a>
-            </div>
-
-        </div>
-
+    <div class="admin-table-actions">
+        <a href="{{url_for('add_new_event')}}" class="link-1"><i class="fa-solid fa-plus"></i> Add New Event</a>
     </div>
 
+    <div class="admin-table-card">
+        <div class="admin-table-card-header">
+            <div>
+                <h2 class="admin-table-card-title">Upcoming Events</h2>
+                <p class="admin-table-card-description">Manage upcoming event themes, flyers, dates, venues, and publishing details.</p>
+            </div>
+        </div>
 
     <div class="row">
         <div class="col-12 table-wrapper">
@@ -32,6 +32,11 @@
                     <th>
                         <h5>Theme</h5>
                     </th>
+
+                    <th>
+                        <h5>Flyer</h5>
+                    </th>
+ 
                     <th>
                         <h5>Date</h5>
                     </th>
@@ -55,7 +60,7 @@
                         <h5>Edit</h5>
                     </th>
 
-                    <th>
+                    <th class="sticky-action">
                         <h5>Delete</h5>
                     </th>
 
@@ -79,6 +84,15 @@
                                             {{ event.event_theme }}
                                         {% endif %}
                                     </p>
+                                </td>
+
+                                 <td class="min-width">
+                                    {% if event.event_flyer_filename %}
+                                    <img src="{{ url_for('static', filename='uploads/events/' + event.event_flyer_filename) }}"
+                                         alt="Flyer" style="width:48px;height:48px;object-fit:cover;border-radius:6px;">
+                                    {% else %}
+                                    <span class="text-muted small">—</span>
+                                    {% endif %}
                                 </td>
 
                                 <td class="min-width special-td">
@@ -111,25 +125,26 @@
                                     <p class="pointer"><a href="{{ url_for('edit_event', id=event.event_id) }}"><i class="fa-regular fa-pen-to-square"></i> Edit</a></p>
                                 </td>
 
-                                <td class="action">
+                                <td class="action sticky-action">
                                     <p class="pointer delete-event-btn" data-id='{{event.event_id}}'><i class="fa-regular fa-trash-can"></i></p>
                                 </td>
 
                             </tr> 
                         {% else%}
                             <tr>
-                                <td colspan="8" class="text-center"><p>No Event Found</p></td>
+                                <td colspan="10" class="text-center"><p>No Event Found</p></td>
                             </tr>
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="8" class="text-center"><p>No Event Found</p></td>
+                            <td colspan="10" class="text-center"><p>No Event Found</p></td>
                         </tr>
                     {% endif %}
                 </tbody>
             </table>
 
         </div>
+    </div>
     </div>
 
 {% endblock content %}

@@ -1,0 +1,1279 @@
+{% extends "user/user_template.html" %}
+
+{% block title %}Book a Session - Beulah Foundation for Christ{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    {% include "user/navigation.html" %}
+
+    <div class="col-12 pages-banner pages-banner-counselling">
+      <div class="banner-heading flex-column">
+        <h1>Book Counseling</h1>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row counselling-form">
+    <div class="form-card counselling-form-card">
+
+      <ul class="nav nav-tabs counselling-form-nav counselling-form-padding" id="bookingTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-pane" type="button" role="tab" aria-selected="true">
+            <i class="fa-solid fa-circle-info"></i> Overview
+          </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="book-tab" data-bs-toggle="tab" data-bs-target="#book-pane" type="button" role="tab" aria-selected="true">
+            <i class="fa-solid fa-calendar-plus"></i> Book a Session
+          </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="manage-tab" data-bs-toggle="tab" data-bs-target="#manage-pane" type="button" role="tab" aria-selected="false">
+            <i class="fa-solid fa-calendar-check"></i> My Booking
+          </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="faq-tab" data-bs-toggle="tab" data-bs-target="#faq-pane" type="button" role="tab" aria-selected="true">
+            <i class="fa-solid fa-circle-question"></i> Counseling FAQ
+          </button>
+        </li>
+        
+        <!-- <li class="nav-item donate-button" role="presentation">
+          <button class="nav-link" id="donate-tab" data-bs-toggle="tab" data-bs-target="#donate-pane" type="button" role="tab" aria-selected="false">
+            <i class="fa-solid fa-hand-holding-heart"></i> Donate
+          </button>
+        </li> -->
+      </ul>
+
+      <div class="tab-content pt-md-5 pt-4" id="bookingTabsContent">
+
+        <!-- ═══════════════════════════ OVERVIEW TAB ═══════════════════════════ -->
+        <div class="tab-pane fade show active overview-tab" id="overview-pane" role="tabpanel">
+          <!-- header -->
+          <section class="overview-tab-header counselling-form-padding">
+            <h1>You don't have to carry this alone.</h1>
+            <p>
+              We offers free, confidential online counseling
+              sessions rooted in faith and genuine care. No accounts, no
+              pressure - just a safe space to be heard.
+            </p>
+            <div class="d-flex flex-wrap gap-4 quick-links">
+              <button data-bs-toggle="tab" data-bs-target="#book-pane" class="btn-primary text-base px-6 py-1.5">
+                Book a Session
+              </button>
+              <a href="{{url_for('about')}} "class="btn-secondary text-base px-6 py-1.5">
+                Meet Us
+              </a>
+            </div>
+            
+            <div class="counselling-features">
+              <div>
+                <p class="feature-label">100%</p>
+                <p class="feature-value">Free</p>
+              </div>
+              <div class="divider"></div>
+              <div>
+                <p class="feature-label">Private</p>
+                <p class="feature-value">Confidential</p>
+              </div>
+              <div class="divider"></div>
+              <div>
+                <p class="feature-label">Online</p>
+                <p class="feature-value">Google Meet</p>
+              </div>
+            </div>
+          </section>
+
+            <!-- How it works -->
+          <section class="counselling-form-padding how-it-works">
+            <div class="text-center">
+              <h2>How it works</h2>
+              <p>
+                Getting support is simple. No forms, no waiting rooms, no barriers.
+              </p>
+            </div>
+            <div class="how-it-works-card-cont">
+              <div class="card">
+                <div>
+                  <i class="fa-solid fa-calendar-days"></i>
+                </div>
+                <h3 class="mb-2">Choose a time</h3>
+                <p>Pick a date and time slot that works for you from our live availability.</p>
+              </div>
+
+              <div class="card">
+                <div>
+                  <i class="fa-solid fa-link"></i>
+                </div>
+                <h3 class="mb-2">Get your link</h3>
+                <p>Receive a secure Google Meet link and a management URL - no account needed.</p>
+              </div>
+
+              <div class="card">
+                <div>
+                  <i class="fa-solid fa-comments"></i>
+                </div>
+                <h3 class="mb-2">Show up & talk</h3>
+                <p>Join the session at your scheduled time. Our counselor will be there, ready to listen.</p>
+              </div>
+            </div>
+            <div class="text-center mt-10">
+              <button data-bs-toggle="tab" data-bs-target="#book-pane" class="counseling-cta-button">
+                Book Your Session Now
+              </button>
+            </div>
+          </section>
+
+            <!--  Mission & Donate CTA  -->
+          <!-- <section class="counselling-form-padding keep-mission-free">
+            <div class="mission-content">
+                <h2>Help keep this mission free.</h2>
+                <h2 class="mission-vision">
+                  "Making counseling accessible to everyone regardless of circumstance."
+                </h2>
+                <p>
+                  We are committed to
+                  providing free, faith-rooted counseling to individuals who need it
+                  most. Every session is completely free.
+                </p>
+                <p>
+                    Every donation helps us continue offering free sessions to people
+                    who need them. No amount is too small - your generosity creates
+                    real change.
+                </p>
+            </div>
+
+            <button class="donate-btn" data-bs-toggle="tab" data-bs-target="#donate-pane">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+                Make a Donation
+            </button>
+          </section> -->
+
+        </div>
+
+        <!-- ═══════════════════════════ BOOK TAB ═══════════════════════════ -->
+        <div class="tab-pane fade counselling-form-padding" id="book-pane" role="tabpanel">
+  
+          <div class="d-flex justify-content-center align-items-center gap-2 mb-4" id="bookingProgress">
+            <div class="step-dot active" data-step="1">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot" data-step="2">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot" data-step="3">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot" data-step="4">4</div>
+          </div>
+        
+          <form id="bookingForm">
+        
+            <!-- ═══════ STEP 1: Session Type ═══════ -->
+            <div class="booking-step" id="step1" data-step="1">
+              <label class="form-label">What kind of session?</label>
+        
+              <div class="row g-2 mb-4">
+                <div class="col-md-6 col-12">
+                  <button type="button" class="format-btn active" data-format="single">
+                    <strong>Single Session</strong><br><span class="small text-muted">One-time counseling session</span>
+                  </button>
+                </div>
+                <div class="col-md-6 col-12">
+                  <button type="button" class="format-btn" data-format="recurring">
+                    <strong>Recurring</strong><br><span class="small text-muted">Weekly, bi-weekly, or monthly</span>
+                  </button>
+                </div>
+              </div>
+              <input type="hidden" id="sessionFormat" value="single">
+        
+              <div class="input-style-1">
+                <label class="form-label">Session Format</label>
+                <div class="row g-2">
+                  <div class="col-md-6 col-12">
+                    <button type="button" class="type-btn active" data-type="audio">Audio Call</button>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <button type="button" class="type-btn" data-type="video">Video Call</button>
+                  </div>
+                </div>
+                <input type="hidden" name="session_type" id="sessionType" value="audio">
+              </div>
+        
+              <div class="row" id="recurringFields" style="display:none;">
+                <div class="col-md-6 input-style-1">
+                  <label class="form-label">Frequency</label>
+                  <select  name="frequency" id="frequency">
+                    <option value="weekly">Weekly</option>
+                    <option value="biweekly">Bi-weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                </div>
+                <div class="col-md-6 input-style-1">
+                  <label class="form-label">Repeat Until</label>
+                  <input type="date"  name="end_date" id="endDate">
+                </div>
+              </div>
+        
+              <div id="step1Error" class="alert alert-danger" style="display:none;"></div>
+                <button type="button" class="btn step-next-btn button_submit">Continue</button>
+              </div>
+        
+            <!-- ═══════ STEP 2: Date & Time ═══════ -->
+            <div class="booking-step" id="step2" data-step="2" style="display:none;">
+              <h5 class="mb-3">Pick a Preferred date &amp; time</h5>
+        
+              <div class="input-style-1">
+                <input type="date"  name="date" id="bookingDate" min="{{ today }}" required>
+              </div>
+        
+              <div class="input-style-1" id="slotsWrapper" style="display:none;">
+                <label class="form-label">Available Times <span class="text-muted small">(WAT)</span></label>
+                <div id="slotsLoading" class="text-muted small">Loading available times…</div>
+                <div id="slotsGrid" class="d-flex flex-wrap gap-2"></div>
+                <div id="slotsEmpty" class="text-muted small" style="display:none;">
+                  No slots available on this date. Please try another day.
+                </div>
+                <input type="hidden" name="start_time" id="selectedStartTime">
+              </div>
+        
+              <div id="step2Error" class="alert alert-danger" style="display:none;"></div>
+              <div class="d-flex gap-2 mt-3">
+                <button type="button" class="btn btn-secondary flex-fill step-back-btn" data-back="1">Back</button>
+                <button type="button" class="btn flex-fill step-next-btn button_submit">Continue</button>
+              </div>
+            </div>
+        
+            <!-- ═══════ STEP 3: Details ═══════ -->
+            <div class="booking-step" id="step3" data-step="3" style="display:none;">
+              <h5 class="mb-3">Your details</h5>
+        
+              <div class="input-style-1">
+                <label class="form-label">Full Name</label>
+                <input type="text"  name="name" id="bookerName" required>
+              </div>
+              <div class="input-style-1">
+                <label class="form-label">Email</label>
+                <input type="email"  name="email" id="bookerEmail" required>
+              </div>
+              <div class="input-style-1">
+                <label class="form-label">Phone (optional)</label>
+                <input type="tel"  name="phone" id="bookerPhone">
+              </div>
+              <div class="input-style-1">
+                <label class="form-label">Reason for Session (optional)</label>
+                <textarea  name="reason" id="bookingReason" rows="3"></textarea>
+              </div>
+        
+              <div id="step3Error" class="alert alert-danger" style="display:none;"></div>
+              <div class="d-flex gap-2 mt-3">
+                <button type="button" class="btn btn-secondary flex-fill step-back-btn" data-back="2">Back</button>
+                <button type="button" class="btn flex-fill step-next-btn button_submit">Review</button>
+              </div>
+            </div>
+        
+            <!-- ═══════ STEP 4: Confirm ═══════ -->
+            <div class="booking-step" id="step4" data-step="4" style="display:none;">
+              <h5 class="mb-3">Confirm your booking</h5>
+        
+              <div class="bg-light rounded p-3 mb-3" id="confirmSummary"></div>
+        
+              <p class="text-muted small mb-3">
+                By booking, you agree to our cancellation policy: sessions must be cancelled at least 24 hours in advance.
+              </p>
+        
+              <div id="bookingError" class="alert alert-danger" style="display:none;"></div>
+              <div class="d-flex gap-2 step4-actions">
+                <button type="button" class="btn btn-secondary flex-fill step-back-btn" data-back="3">Back</button>
+                <button type="button" class="btn flex-fill button_submit" id="submitBookingBtn">
+                  Confirm Booking
+                </button>
+              </div>
+              <p class="text-muted small text-center mt-2">
+                Sessions are 60 minutes. You'll receive a confirmation email with a link to manage your appointment.
+              </p>
+
+              <div class="input-style-1">
+                <div id="turnstileBooking"  class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+              </div>
+ 
+              <!-- Honeypot — real users never see or fill this in -->
+              <div class="hp-field" aria-hidden="true">
+                <label for="bookingWebsite">Leave empty</label>
+                <input type="text" name="website" id="bookingWebsite" tabindex="-1" autocomplete="off">
+              </div>
+            </div>
+
+            <!-- ═══════ STEP 5: Success ═══════ -->
+            <div class="booking-step text-center" id="stepSuccess" data-step="5" style="display:none;">
+ 
+              <div class="success-check-circle">
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <h4 class="fw-bold mb-2">You're all booked!</h4>
+              <p class="text-muted" id="successMessage"></p>
+ 
+              <div class="bg-light rounded p-3 my-3 text-start">
+                <p class="text-muted small mb-1">Manage your appointment</p>
+                <a href="#" id="manageLinkDisplay" style="word-break:break-all;color:#68764b;font-weight:700;"></a>
+              </div>
+ 
+              <button type="button" class="btn button_submit" id="viewAppointmentBtn">
+                View Appointment <i class="fa-solid fa-arrow-right ms-1"></i>
+              </button>
+            </div>
+ 
+          </form>
+        </div>
+  
+        <!-- ═══════════════════════════ MANAGE TAB ═══════════════════════════ -->
+        <div class="tab-pane fade counselling-form-padding" id="manage-pane" role="tabpanel">
+          <div class="input-style-1">
+            <label class="form-label">Your Manage Token</label>
+            <p class="text-muted small">
+              Paste the token from your confirmation email - or follow the link in that email, which fills this in for you.
+            </p>
+            <div>
+              <input type="text"  id="manageTokenInput" value="{{ prefill_token }}" placeholder="e.g. 8f14e45f-ceea-4...">
+              <button type="button" class="btn button_submit mt-3" id="lookupBookingBtn">
+                Find My Booking
+              </button>
+            </div>
+          </div>
+          <div id="manageError" class="alert alert-danger mt-3" style="display:none;"></div>
+          <div id="manageResult" style="display:none;"></div>
+        </div>
+
+        <!-- ═══════════════════════════ FAQ TAB ═══════════════════════════ -->
+
+        <div class="tab-pane fade counselling-form-padding" id="faq-pane" role="tabpanel">
+  
+          <div class="faq-group">
+            <p class="faq-category-label">Sessions</p>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">How does a session work?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                You book a session online, receive a Google Meet link via email, and join at the scheduled time. No apps to download, just click the link. Sessions are 60 minutes long.
+              </div>
+            </div>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">Is it really free?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                Yes, completely. Beulah Foundation for Christ is a ministry, and this counseling service will always be free, made possible through generous donations.
+              </div>
+            </div>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">Do I need to create an account?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                No account is needed. You just fill in your name and email when booking, and you'll receive a unique management link to view, reschedule, or cancel your appointment.
+              </div>
+            </div>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">What happens during a session?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                Our counselor will listen, ask questions, and provide guidance rooted in faith and care. Sessions are conversational and non-clinical — you set the pace.
+              </div>
+            </div>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">Can I have recurring sessions?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                Yes. You can book weekly, bi-weekly, or monthly recurring sessions right from the Book tab.
+              </div>
+            </div>
+          </div>
+  
+          <div class="faq-group">
+            <p class="faq-category-label">Privacy</p>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">Is what I share kept confidential?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                Yes. Conversations during your session are strictly confidential. Your information will never be shared with third parties.
+              </div>
+            </div>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">What information do you collect?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                Only what is necessary: your name, email address, and optional phone number for booking. Your reason for counseling is optional and only visible to our counselor.
+              </div>
+            </div>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">Where is my data stored?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                Your data is stored securely in our database, and all communication with the site happens over HTTPS.
+              </div>
+            </div>
+          </div>
+  
+          <div class="faq-group">
+            <p class="faq-category-label">Scheduling</p>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">How do I cancel or reschedule?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                Use the secure management link in your confirmation email, or paste your manage token into the "My Booking" tab above. Cancellations and reschedules must be made at least 24 hours before your session.
+              </div>
+            </div>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">What timezone are sessions in?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                All availability and session times are shown in West Africa Time (WAT, UTC+1) — please adjust accordingly if you're joining from elsewhere.
+              </div>
+            </div>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">What if there's no availability on my preferred date?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                Check back regularly, as new availability is added. You can also reach out through our Contact page to request a specific time.
+              </div>
+            </div>
+          </div>
+  
+          <!-- <div class="faq-group mb-0">
+            <p class="faq-category-label">Donations</p>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">Do I have to donate to book a session?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                Absolutely not. Donations are entirely voluntary and separate from bookings. Sessions are free regardless.
+              </div>
+            </div>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">What payment methods are accepted for donations?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                We accept Paystack for African payments (including NGN, GHS, KES, and more) and Stripe for international card payments (Visa, Mastercard, etc.).
+              </div>
+            </div>
+  
+            <div class="faq-item">
+              <button type="button" class="faq-question">
+                <span class="faq-q-text">Will I get a receipt for my donation?</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                Yes. If you provide your email address, you'll receive a donation receipt shortly after your payment is confirmed.
+              </div>
+            </div>
+          </div> -->
+  
+          <div class="text-center mt-4 faq-contact" style="border-top:1px solid #eee;">
+            <p class="faq-contact-title mb-1">Still have questions?</p>
+            <p class="text-muted mb-3">Send us a message and we'll get back to you.</p>
+            <a href="{{ url_for('contact_us') }}" class="button_submit w-fit">
+              Contact Us <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+  
+        <!-- ═══════════════════════════ DONATE TAB ═══════════════════════════ -->
+        <!-- <div class="tab-pane fade counselling-form-padding donate-tab" id="donate-pane" role="tabpanel">
+
+          <div class="input-style-1">
+            <label class="form-label">Payment Method</label>
+            <div class="row g-2">
+              <div class="col-md-6 col-12">
+                <button type="button" class="gateway-btn active" data-gateway="paystack">
+                  Paystack<br><span class="small text-muted">Best for African payments</span>
+                </button>
+              </div>
+              <div class="col-md-6 col-12">
+                <button type="button" class="gateway-btn" data-gateway="stripe">
+                  Card / International<br><span class="small text-muted">Visa, Mastercard, etc.</span>
+                </button>
+              </div>
+            </div>
+            <input type="hidden" id="donationGateway" value="paystack">
+          </div>
+
+          <div class="input-style-1">
+            <label class="form-label">Currency</label>
+            <select  id="donationCurrency">
+              <option value="NGN">NGN - Nigerian Naira</option>
+              <option value="USD">USD - US Dollar</option>
+              <option value="GBP">GBP - British Pound</option>
+              <option value="EUR">EUR - Euro</option>
+              <option value="GHS">GHS - Ghanaian Cedi</option>
+              <option value="KES">KES - Kenyan Shilling</option>
+            </select>
+          </div>
+
+          <div class="input-style-1">
+            <label class="form-label">Amount</label>
+            <div class="d-flex flex-wrap gap-2 mb-2" id="amountPresets"></div>
+            <input type="number"  id="donationCustomAmount" placeholder="Or enter a custom amount" min="1">
+          </div>
+
+          <div class="input-style-1">
+            <div class="check">
+              <input type="checkbox" id="donationAnonymous">
+              <label for="donationAnonymous">Donate anonymously</label>
+            </div>
+          </div>
+
+          <div id="donorFields">
+            <div class="input-style-1">
+              <label class="form-label">Your Name</label>
+              <input type="text"  id="donorName">
+            </div>
+            <div class="input-style-1">
+              <label class="form-label">Email (for receipt)</label>
+              <input type="email"  id="donorEmail">
+            </div>
+          </div>
+
+          <div class="input-style-1">
+            <div id="turnstileDonate"  class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+          </div>
+ 
+          Honeypot — real users never see or fill this in 
+          <div class="hp-field" aria-hidden="true">
+            <label for="donateWebsite">Leave empty</label>
+            <input type="text" name="website" id="donateWebsite" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div id="donationError" class="alert alert-danger" style="display:none;"></div>
+
+          <button type="button" class="button_submit" id="submitDonationBtn">
+            Donate 💙
+          </button>
+          <p class="text-muted small text-center mt-2">
+            Payments are processed securely by Paystack or Stripe. Beulah Foundation for Christ never stores your card details.
+          </p>
+        </div> -->
+
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const todayStr = "{{ today }}";
+
+    function formatTime12Hour(time) {
+      if (!time) return '';
+
+      const [hourStr, minute] = time.split(':');
+      let hour = parseInt(hourStr, 10);
+
+      const period = hour >= 12 ? 'PM' : 'AM';
+
+      hour = hour % 12;
+      hour = hour === 0 ? 12 : hour;
+
+      return hour + ':' + minute + ' ' + period;
+    }
+
+    function addMinutesToTime(time, minutesToAdd) {
+      if (!time) return '';
+
+      const [hourStr, minuteStr] = time.split(':');
+      const date = new Date();
+      date.setHours(parseInt(hourStr, 10), parseInt(minuteStr, 10), 0, 0);
+      date.setMinutes(date.getMinutes() + minutesToAdd);
+
+      return String(date.getHours()).padStart(2, '0') + ':' +
+             String(date.getMinutes()).padStart(2, '0');
+    }
+
+    // Route "shortcut" buttons to the real tab trigger so Bootstrap can
+    // find the nav ancestor it needs to deactivate the current pane.
+    document.querySelectorAll('[data-bs-target]:not(#bookingTabs button)').forEach(function (btn) {
+      const target = btn.getAttribute('data-bs-target');
+      const realTrigger = document.querySelector('#bookingTabs button[data-bs-target="' + target + '"]');
+      if (!realTrigger) return;
+
+      btn.addEventListener('click', function () {
+        bootstrap.Tab.getOrCreateInstance(realTrigger).show();
+        document.querySelector('.pages-banner-counselling').scrollIntoView({ behavior: 'smooth', block: 'end' });
+      });
+    });
+
+    function postJSON(url, body) {
+      return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify(body)
+      }).then(r => r.json().then(data => ({ ok: r.ok, data })));
+    }
+
+    const tabTriggerEls = document.querySelectorAll('#bookingTabs button[data-bs-toggle="tab"]');
+    tabTriggerEls.forEach(function (triggerEl) {
+      triggerEl.addEventListener('shown.bs.tab', function (event) {
+        const targetHash = event.target.getAttribute('data-bs-target'); 
+        history.replaceState(null, '', targetHash);
+      });
+    });
+ 
+    function activateTabFromHash() {
+      const hash = window.location.hash;
+      if (!hash) return false;
+      const trigger = document.querySelector('#bookingTabs button[data-bs-target="' + hash + '"]');
+      if (!trigger) return false;
+      new bootstrap.Tab(trigger).show();
+      return true;
+    }
+
+    // Shared slot-rendering, used by both the Book tab and the Manage
+    // tab's reschedule panel.
+    function renderSlots(date, gridEl, loadingEl, emptyEl, hiddenInputEl) {
+      gridEl.innerHTML = '';
+      emptyEl.style.display = 'none';
+      loadingEl.style.display = 'block';
+      hiddenInputEl.value = '';
+
+      fetch(`/book/available-slots/?date=${date}`)
+        .then(r => r.json())
+        .then(data => {
+          loadingEl.style.display = 'none';
+          const slots = data.slots || [];
+          if (slots.length === 0) {
+            emptyEl.style.display = 'block';
+            return;
+          }
+          slots.forEach(slot => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.textContent = slot.start_time;
+            btn.className = 'btn btn-sm';
+            btn.style.border = 'none';
+            btn.style.backgroundColor='#f2f2f2';
+            btn.style.color = '#333333';
+            btn.disabled = !slot.available;
+            if (!slot.available) {
+              btn.style.opacity = '0.4';
+            } else {
+              btn.addEventListener('click', function () {
+                const isAlreadySelected = hiddenInputEl.value === slot.start_time;
+                gridEl.querySelectorAll('button').forEach(b => {
+                  b.style.backgroundColor = '#f2f2f2';
+                  b.style.color = '#333333';
+                });
+
+                if (isAlreadySelected) {
+                  hiddenInputEl.value = '';
+                } else {
+                  btn.style.backgroundColor = '#68764b';
+                  btn.style.color = '#fff';
+                  hiddenInputEl.value = slot.start_time;
+                }
+              });
+            }
+            gridEl.appendChild(btn);
+          });
+        })
+        .catch(() => {
+          loadingEl.style.display = 'none';
+          emptyEl.textContent = 'Could not load available times. Please try again.';
+          emptyEl.style.display = 'block';
+        });
+    }
+
+
+    // ── Step navigation ────────────────────────────────────────────────
+    const steps = document.querySelectorAll('.booking-step');
+    const dots = document.querySelectorAll('.step-dot');
+  
+    function goToStep(stepNum) {
+      stepNum = parseInt(stepNum, 10);
+      steps.forEach(s => {
+        s.style.display = (parseInt(s.dataset.step, 10) === stepNum) ? 'block' : 'none';
+      });
+ 
+      const progress = document.getElementById('bookingProgress');
+      if (stepNum <= 4) {
+        progress.style.display = 'flex';
+        dots.forEach(d => {
+          d.classList.toggle('active', parseInt(d.dataset.step, 10) <= stepNum);
+        });
+      } else {
+        progress.style.display = 'none';
+      }
+ 
+      if (stepNum === 4) buildConfirmSummary();
+    }
+ 
+    function showStepError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+    function clearStepError(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+  
+    document.querySelectorAll('.step-back-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { goToStep(this.dataset.back); });
+    });
+  
+    // ── Step 1: format + type toggles ──────────────────────────────────
+    const sessionFormatInput = document.getElementById('sessionFormat');
+    const sessionTypeInput = document.getElementById('sessionType');
+    const recurringFields = document.getElementById('recurringFields');
+    const dateLabel = document.getElementById('dateLabel');
+  
+    document.querySelectorAll('.format-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        sessionFormatInput.value = this.dataset.format;
+        const isRecurring = this.dataset.format === 'recurring';
+        recurringFields.style.display = isRecurring ? 'flex' : 'none';
+        dateLabel.textContent = isRecurring ? 'Start Date' : 'Preferred Date';
+      });
+    });
+  
+    document.querySelectorAll('.type-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        sessionTypeInput.value = this.dataset.type;
+      });
+    });
+  
+    document.querySelector('#step1 .step-next-btn').addEventListener('click', function () {
+      if (sessionFormatInput.value === 'recurring' && !document.getElementById('endDate').value) {
+        showStepError('step1Error', 'Please choose an end date for the recurring session.');
+        return;
+      }
+      clearStepError('step1Error');
+      goToStep(2);
+    });
+  
+    // ── Step 2: date + slots ────────────────────────────────────────────
+    const dateInput = document.getElementById('bookingDate');
+    const slotsWrapper = document.getElementById('slotsWrapper');
+    const slotsLoading = document.getElementById('slotsLoading');
+    const slotsGrid = document.getElementById('slotsGrid');
+    const slotsEmpty = document.getElementById('slotsEmpty');
+    const selectedStartTime = document.getElementById('selectedStartTime');
+  
+    dateInput.addEventListener('change', function () {
+      if (!this.value) return;
+      slotsWrapper.style.display = 'block';
+      renderSlots(this.value, slotsGrid, slotsLoading, slotsEmpty, selectedStartTime);
+    });
+  
+    document.querySelector('#step2 .step-next-btn').addEventListener('click', function () {
+      if (!dateInput.value || !selectedStartTime.value) {
+        showStepError('step2Error', 'Please choose a date and an available time.');
+        return;
+      }
+      clearStepError('step2Error');
+      goToStep(3);
+    });
+  
+    // ── Step 3: details ─────────────────────────────────────────────────
+    document.querySelector('#step3 .step-next-btn').addEventListener('click', function () {
+      const name = document.getElementById('bookerName').value.trim();
+      const email = document.getElementById('bookerEmail').value.trim();
+      if (!name || !email) {
+        showStepError('step3Error', 'Please fill in your name and email.');
+        return;
+      }
+      clearStepError('step3Error');
+      goToStep(4);
+    });
+  
+    // ── Step 4: confirm summary + submit ────────────────────────────────
+    function buildConfirmSummary() {
+      const rows = [
+        ['Name', document.getElementById('bookerName').value],
+        ['Email', document.getElementById('bookerEmail').value],
+        ['Date', dateInput.value],
+        ['Time', formatTime12Hour(selectedStartTime.value) + ' (WAT)'],
+        ['Format', sessionTypeInput.value + ' · ' +
+          (sessionFormatInput.value === 'recurring' ? document.getElementById('frequency').value : 'single session')]
+      ];
+      document.getElementById('confirmSummary').innerHTML = rows.map(r =>
+        '<div class="d-flex justify-content-between small mb-1"><span class="text-muted">' + r[0] +
+        '</span><strong>' + r[1] + '</strong></div>'
+      ).join('');
+    }
+  
+    const bookingError = document.getElementById('bookingError');
+    const bookingSuccess = document.getElementById('bookingSuccess');
+    const submitBtn = document.getElementById('submitBookingBtn');
+  
+    submitBtn.addEventListener('click', function () {
+      bookingError.style.display = 'none';
+
+      const payload = {
+        name: document.getElementById('bookerName').value.trim(),
+        email: document.getElementById('bookerEmail').value.trim(),
+        phone: document.getElementById('bookerPhone').value.trim(),
+        session_type: sessionTypeInput.value,
+        date: dateInput.value,
+        start_time: selectedStartTime.value,
+        reason: document.getElementById('bookingReason').value.trim(),
+        is_recurring: sessionFormatInput.value === 'recurring',
+        frequency: document.getElementById('frequency').value,
+        end_date: document.getElementById('endDate').value,
+        website: document.getElementById('bookingWebsite').value,
+        turnstile_token: turnstile.getResponse(document.getElementById('turnstileBooking'))
+      };
+  
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Booking…';
+  
+      postJSON('/book/submit/', payload).then(({ ok, data }) => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Confirm Booking';
+  
+        if (!ok || !data.success) {
+          bookingError.textContent = data.message || 'Something went wrong. Please try again.';
+          bookingError.style.display = 'block';
+          turnstile.reset(document.getElementById('turnstileBooking'));
+          return;
+        }
+  
+        const manageUrl = data.manage_url || (window.location.origin + window.location.pathname + '?token=' + data.manage_token);
+ 
+        let msg = '';
+        if (data.meet_link) {
+          msg = 'A confirmation email with your Google Meet link has been sent to <strong>' + payload.email + '</strong>.';
+          msg += ' <a href="' + data.meet_link + '" target="_blank" rel="noopener noreferrer">Join Meeting</a>';
+        } else {
+          msg = 'Your booking was confirmed, but the Google Meet link could not be generated automatically. We will follow up by email.';
+        }
+        if (data.bookings_created > 1) {
+          msg += ' <strong>' + data.bookings_created + ' sessions</strong> were scheduled.';
+        }
+        document.getElementById('successMessage').innerHTML = msg;
+ 
+        const linkEl = document.getElementById('manageLinkDisplay');
+        linkEl.textContent = manageUrl;
+        linkEl.href = manageUrl;
+ 
+        window.currentManageToken = data.manage_token; 
+ 
+        goToStep(5);
+      }).catch(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Confirm Booking';
+        bookingError.textContent = 'Network error. Please try again.';
+        bookingError.style.display = 'block';
+      });
+    });
+  
+    goToStep(1);
+  
+    // ── Manage tab ──────────────────────────────────────────────────────
+    const manageTokenInput = document.getElementById('manageTokenInput');
+    const manageError = document.getElementById('manageError');
+    const manageResult = document.getElementById('manageResult');
+    const statusColors = {
+      confirmed: '#198754', pending: '#ffc107', cancelled: '#dc3545',
+      completed: '#0d6efd', no_show: '#6c757d', rescheduled: '#6f42c1'
+    };
+
+  
+    function renderBookingCard(booking) {
+      const canManage = !['cancelled', 'completed'].includes(booking.status);
+
+      manageResult.innerHTML =
+        '<div class="card p-3 mb-3">' +
+          '<div class="d-flex justify-content-between align-items-center mb-2">' +
+            '<strong>' + booking.booker_name + '</strong>' +
+            '<span class="badge" style="background:' + (statusColors[booking.status] || '#6c757d') + ';">' + booking.status + '</span>' +
+          '</div>' +
+          '<p class="mb-1"><strong>Date:</strong> ' + booking.date + '</p>' +
+          '<p class="mb-1"><strong>Time:</strong> ' + formatTime12Hour(booking.start_time) + ' - ' + formatTime12Hour(booking.end_time) + ' (WAT)</p>' +
+          '<p class="mb-1"><strong>Format:</strong> ' + booking.session_type + '</p>' +
+          (booking.meet_link ? '<p class="mb-1"><a class="text-decoration-none hover-underline" href="' + booking.meet_link + '" target="_blank" rel="noopener noreferrer">Join Meeting</a></p>' : '') +
+        '</div>' +
+        (canManage ?
+          '<div class="d-flex gap-2 mb-3">' +
+            '<button type="button" class="btn btn-md button-hover-state" id="showRescheduleBtn" style="background:#6D0F15; color:#fff;">Reschedule</button>' +
+            '<button type="button" class="btn btn-md btn-outline-danger" id="cancelBookingBtn">Cancel Booking</button>' +
+          '</div>' +
+
+          '<div id="reschedulePanel" style="display:none;">' +
+
+            '<div id="rescheduleSelectStep">' +
+              '<h5 class="mb-3">Choose a new date &amp; time</h5>' +
+
+              '<div class="input-style-1">' +
+                '<label class="form-label">New Date</label>' +
+                '<input type="date" id="rescheduleDate" min="' + todayStr + '">' +
+              '</div>' +
+
+              '<div class="input-style-1" id="rescheduleSlotsWrapper" style="display:none;">' +
+                '<label class="form-label">Available Times <span class="text-muted small">(WAT)</span></label>' +
+                '<div id="rescheduleSlotsLoading" class="text-muted small">Loading available times…</div>' +
+                '<div id="rescheduleSlotsGrid" class="d-flex flex-wrap gap-2"></div>' +
+                '<div id="rescheduleSlotsEmpty" class="text-muted small" style="display:none;">No slots available on this date.</div>' +
+                '<input type="hidden" id="rescheduleSelectedTime">' +
+              '</div>' +
+
+              '<button type="button" class="btn btn-md mt-2 button-hover-state" id="reviewRescheduleBtn" style="background:#6D0F15;color:#fff;">' +
+                'Review Reschedule' +
+              '</button>' +
+            '</div>' +
+
+            '<div id="rescheduleReviewStep" style="display:none;">' +
+              '<h5 class="mb-3">Review Updated Session</h5>' +
+
+              '<div class="card bg-light border-0 p-3 mb-3">' +
+                '<p class="text-muted small mb-2">Current Session</p>' +
+                '<p class="mb-1"><strong>Date:</strong> ' + booking.date + '</p>' +
+                '<p class="mb-3"><strong>Time:</strong> ' +
+                  formatTime12Hour(booking.start_time) + ' - ' +
+                  formatTime12Hour(booking.end_time) + ' (WAT)</p>' +
+
+                '<hr>' +
+
+                '<p class="text-muted small mb-2">New Session</p>' +
+                '<p class="mb-1"><strong>Date:</strong> <span id="reviewNewDate"></span></p>' +
+                '<p class="mb-0"><strong>Time:</strong> <span id="reviewNewTime"></span></p>' +
+              '</div>' +
+
+              '<div class="d-flex gap-2">' +
+                '<button type="button" class="btn btn-secondary" id="backToRescheduleBtn">Back</button>' +
+                '<button type="button" class="btn btn-md button-hover-state" id="confirmRescheduleBtn" style="background:#6D0F15;color:#fff;">Confirm Reschedule</button>' +
+              '</div>' +
+            '</div>' +
+
+          '</div>'
+        : '');
+
+      manageResult.style.display = 'block';
+
+      if (!canManage) return;
+
+      document.getElementById('showRescheduleBtn').addEventListener('click', function () {
+        manageError.style.display = 'none';
+
+        const panel = document.getElementById('reschedulePanel');
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      });
+
+      document.getElementById('rescheduleDate').addEventListener('change', function () {
+        manageError.style.display = 'none';
+
+        document.getElementById('rescheduleSlotsWrapper').style.display = 'block';
+        renderSlots(
+          this.value,
+          document.getElementById('rescheduleSlotsGrid'),
+          document.getElementById('rescheduleSlotsLoading'),
+          document.getElementById('rescheduleSlotsEmpty'),
+          document.getElementById('rescheduleSelectedTime')
+        );
+      });
+
+      document.getElementById('reviewRescheduleBtn').addEventListener('click', function () {
+        const newDate = document.getElementById('rescheduleDate').value;
+        const newTime = document.getElementById('rescheduleSelectedTime').value;
+
+        manageError.style.display = 'none';
+
+        if (!newDate || !newTime) {
+          manageError.textContent = 'Please choose a date and time.';
+          manageError.style.display = 'block';
+          return;
+        }
+
+        const newEndTime = addMinutesToTime(newTime, 60);
+
+        document.getElementById('reviewNewDate').textContent = newDate;
+        document.getElementById('reviewNewTime').textContent =
+          formatTime12Hour(newTime) + ' - ' + formatTime12Hour(newEndTime) + ' (WAT)';
+
+        document.getElementById('rescheduleSelectStep').style.display = 'none';
+        document.getElementById('rescheduleReviewStep').style.display = 'block';
+      });
+
+      document.getElementById('backToRescheduleBtn').addEventListener('click', function () {
+        manageError.style.display = 'none';
+
+        document.getElementById('rescheduleReviewStep').style.display = 'none';
+        document.getElementById('rescheduleSelectStep').style.display = 'block';
+      });
+
+      document.getElementById('confirmRescheduleBtn').addEventListener('click', function () {
+        const btn = this;
+        const newDate = document.getElementById('rescheduleDate').value;
+        const newTime = document.getElementById('rescheduleSelectedTime').value;
+
+        manageError.style.display = 'none';
+
+        btn.disabled = true;
+        btn.innerHTML ='Rescheduling...';
+
+        postJSON('/book/manage/reschedule/', {
+          token: booking.manage_token,
+          date: newDate,
+          start_time: newTime
+        })
+          .then(({ ok, data }) => {
+            if (!ok || !data.success) {
+              btn.disabled = false;
+              btn.textContent = 'Confirm Reschedule';
+
+              manageError.textContent = data.message || 'Could not reschedule your appointment.';
+              manageError.style.display = 'block';
+              return;
+            }
+
+            manageError.style.display = 'none';
+            renderBookingCard(data.booking);
+            alertSuccess('Appointment Rescheduled', data.message);
+          })
+          .catch(() => {
+            btn.disabled = false;
+            btn.textContent = 'Confirm Reschedule';
+
+            manageError.textContent = 'Network error. Please try again.';
+            manageError.style.display = 'block';
+          });
+      });
+
+      document.getElementById('cancelBookingBtn').addEventListener('click', function () {
+        confirmDelete('Are you sure you want to cancel this appointment?')
+        .then(function (confirmed) {
+          if (!confirmed) {
+            return;
+          }
+          postJSON('/book/manage/cancel/', { token: booking.manage_token })
+            .then(({ ok, data }) => {
+              if (!ok || !data.success) {
+                manageError.textContent = data.message || 'Could not cancel.';
+                manageError.style.display = 'block';
+                return;
+              }
+              manageError.style.display = 'none';
+              booking.status = 'cancelled';
+              renderBookingCard(booking);
+            });
+        });
+      });
+    }
+
+    function lookupBooking() {
+      manageError.style.display = 'none';
+      manageResult.style.display = 'none';
+      const token = manageTokenInput.value.trim();
+      if (!token) {
+        manageError.textContent = 'Please enter your manage token.';
+        manageError.style.display = 'block';
+        return;
+      }
+      postJSON('/book/manage/lookup/', { token: token }).then(({ ok, data }) => {
+        if (!ok || !data.success) {
+          manageError.textContent = data.message || 'Booking not found.';
+          manageError.style.display = 'block';
+          return;
+        }
+        renderBookingCard(data.booking);
+      });
+    }
+
+    document.getElementById('lookupBookingBtn').addEventListener('click', lookupBooking);
+
+    document.getElementById('viewAppointmentBtn').addEventListener('click', function () {
+      const tab = new bootstrap.Tab(document.getElementById('manage-tab'));
+      tab.show();
+ 
+      manageTokenInput.value = window.currentManageToken || '';
+      lookupBooking();
+    });
+
+    // Auto-lookup if a token was prefilled from the email link
+    if (manageTokenInput.value.trim()) {
+      new bootstrap.Tab(document.getElementById('manage-tab')).show();
+      lookupBooking();
+    } else {
+      activateTabFromHash();
+    }
+
+    // ── Donate tab ────────────────────────────────────────────────────────
+    const gatewayButtons = document.querySelectorAll('.gateway-btn');
+    const donationGatewayInput = document.getElementById('donationGateway');
+    document.querySelectorAll('.gateway-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.gateway-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        donationGatewayInput.value = this.dataset.gateway;
+      });
+    });
+  
+    const AMOUNT_PRESETS = {
+      NGN: [1000, 2500, 5000, 10000, 25000],
+      USD: [10, 25, 50, 100, 250],
+      GBP: [10, 25, 50, 100, 250],
+      EUR: [10, 25, 50, 100, 250],
+      GHS: [50, 100, 250, 500, 1000],
+      KES: [500, 1000, 2500, 5000, 10000]
+    };
+ 
+    const amountPresetsContainer = document.getElementById('amountPresets');
+    const customAmountInput = document.getElementById('donationCustomAmount');
+    const currencySelect = document.getElementById('donationCurrency');
+    let selectedPresetAmount = null;
+ 
+    function renderAmountPresets(currency) {
+      const presets = AMOUNT_PRESETS[currency] || AMOUNT_PRESETS.NGN;
+      amountPresetsContainer.innerHTML = '';
+      customAmountInput.value = '';
+ 
+      presets.forEach(function (amount, index) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'amount-btn' + (index === 0 ? ' active' : '');
+        btn.dataset.amount = amount;
+        btn.textContent = amount.toLocaleString();
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedPresetAmount = amount;
+          customAmountInput.value = '';
+        });
+        amountPresetsContainer.appendChild(btn);
+      });
+ 
+      selectedPresetAmount = presets[0];
+    }
+ 
+    currencySelect.addEventListener('change', function () {
+      renderAmountPresets(this.value);
+    });
+ 
+    renderAmountPresets(currencySelect.value); 
+ 
+    customAmountInput.addEventListener('input', function () {
+      if (this.value) {
+        selectedPresetAmount = null;
+        document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+      }
+    });
+    const donationAnonymous = document.getElementById('donationAnonymous');
+    const donorFields = document.getElementById('donorFields');
+    donationAnonymous.addEventListener('change', function () {
+      donorFields.style.display = this.checked ? 'none' : 'block';
+    });
+
+    const donationError = document.getElementById('donationError');
+    const submitDonationBtn = document.getElementById('submitDonationBtn');
+
+    submitDonationBtn.addEventListener('click', function () {
+      donationError.style.display = 'none';
+
+      submitDonationBtn.disabled = true;
+      submitDonationBtn.textContent = 'Processing...';
+
+      const amount = customAmountInput.value
+          ? parseFloat(customAmountInput.value)
+          : parseFloat(selectedPresetAmount);
+
+      const isAnonymous = donationAnonymous.checked;
+      const name = document.getElementById('donorName').value.trim();
+      const email = document.getElementById('donorEmail').value.trim();
+
+      if (!amount || amount < 1) {
+          donationError.textContent = 'Please choose or enter a valid amount.';
+          donationError.style.display = 'block';
+
+          submitDonationBtn.disabled = false;
+          submitDonationBtn.textContent = 'Donate 💙';
+          return;
+      }
+
+      if (!isAnonymous && (!name || !email)) {
+          donationError.textContent = 'Please provide your name and email, or donate anonymously.';
+          donationError.style.display = 'block';
+
+          submitDonationBtn.disabled = false;
+          submitDonationBtn.textContent = 'Donate 💙';
+          return;
+      }
+
+      postJSON('/book/donate/init/', {
+        gateway: donationGatewayInput.value,
+        amount: amount,
+        currency: document.getElementById('donationCurrency').value,
+        name: isAnonymous ? '' : name,
+        email: isAnonymous ? '' : email,
+        is_anonymous: isAnonymous,
+        website: document.getElementById('donateWebsite').value,
+        turnstile_token: turnstile.getResponse(document.getElementById('turnstileDonate'))
+      }).then(({ ok, data }) => {
+        if (!ok || !data.success) {
+          submitDonationBtn.disabled = false;
+          submitDonationBtn.textContent = 'Donate 💙';
+          donationError.textContent = data.message || 'Something went wrong. Please try again.';
+          donationError.style.display = 'block';
+          turnstile.reset(document.getElementById('turnstileDonate'));
+          return;
+        }
+        window.location.href = data.checkout_url;
+      })
+      .catch(() => {
+        submitDonationBtn.disabled = false;
+        submitDonationBtn.textContent = 'Donate 💙';
+
+        donationError.textContent = 'Network error. Please try again.';
+        donationError.style.display = 'block';
+    });
+    });
+   
+    // ── FAQ accordion ───────────────────────────────────────────────────
+    document.querySelectorAll('.faq-question').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        this.closest('.faq-item').classList.toggle('open');
+      });
+    });
+  });
+</script>
+{% endblock script %}

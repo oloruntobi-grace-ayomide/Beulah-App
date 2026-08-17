@@ -4,17 +4,19 @@
 
 
 {% block content %}
-    <!-- <div class="row filter-parent-container">
-        <div class="col-12 filter-container">
+    <div class="admin-table-actions">
+        <a href="{{url_for('add_slide_resource')}}" class="link-1"><i class="fa-solid fa-plus"></i> Add New Slide</a>
+    </div>
 
-            <div class="add-resource-div">
-                <a href="{{url_for('add_slide_resource')}}" class="link-1">Add New Slide</a>
+    <div class="admin-table-card">
+        <div class="admin-table-card-header">
+            <div>
+                <h2 class="admin-table-card-title">Slide Resources</h2>
+                <p class="admin-table-card-description">Manage homepage slide images, titles, comments, and linked resource views.</p>
             </div>
-
         </div>
-    </div> -->
 
-    <div class="row mt-5">
+    <div class="row">
         <div class="col-12 table-wrapper">
 
             <table class="table">
@@ -45,7 +47,7 @@
                         <h5>Edit</h5>
                     </th>
 
-                    <th>
+                    <th class="sticky-action">
                         <h5>View</h5>
                     </th>
 
@@ -89,18 +91,18 @@
                                     <p class="pointer"><a href="{{url_for('edit_slide_resource', id=resource.resource_id)}}"><i class="fa-regular fa-pen-to-square"></i> Edit</a></p>
                                 </td>
 
-                                <td class="view-action">
+                                <td class="view-action sticky-action">
                                     <p class="pointer"><a href="{{url_for('dynamic_slides', id=resource.resource_id)}}"><i class="fa-regular fa-eye"></i> View</a></p>
                                 </td>
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="6" class="text-center"><p>No Slides Found</p></td>
+                                <td colspan="7" class="text-center"><p>No Slides Found</p></td>
                             </tr>
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="6" class="text-center">No Slides Found</td>
+                            <td colspan="7" class="text-center">No Slides Found</td>
                         </tr>
                     {% endif %}
                 
@@ -109,6 +111,7 @@
             </table>
 
         </div>
+    </div>
     </div>
     
 {% endblock content %}

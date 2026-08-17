@@ -34,6 +34,24 @@
                 </div>
 
                 <div class="input-style-1">
+                    <label for="flyer">Event Flyer</label>
+    
+                    {% if event.event_flyer_filename %}
+                    <div class="mb-2">
+                        <img src="{{ url_for('static', filename='uploads/events/' + event.event_flyer_filename) }}"
+                            alt="Current flyer" style="max-width:180px;border-radius:8px;display:block;margin-bottom:8px;">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="remove_flyer" id="removeFlyer">
+                            <label class="form-check-label small" for="removeFlyer">Remove current flyer</label>
+                        </div>
+                    </div>
+                    {% endif %}
+    
+                    <input type="file" name="flyer" id="flyer" accept="image/png, image/jpeg, image/webp" />
+                    <p class="text-muted small mt-1">Upload a new image to replace the current flyer. JPG, PNG, or WEBP. Max 5MB.</p>
+                </div>
+
+                <div class="input-style-1">
                     <label for="prayer">Prayer / Words of Encourage</label>
                     <textarea placeholder="Prayer / Encourage" rows="2" name="prayer">
                         {{ event.event_description }}
@@ -74,7 +92,9 @@ window.addEventListener('DOMContentLoaded', function(){
         const eventTime = document.querySelector("input[name='event_time']").value.trim();
         const eventVenue = document.querySelector("input[name='event_venue']").value.trim();
         const prayer = document.querySelector("textarea[name='prayer']").value.trim();
-
+        const flyerInput = document.querySelector("input[name='flyer']");
+        const removeFlyerInput = document.querySelector("input[name='remove_flyer']");
+ 
 
         if (!theme || !eventDate || !eventTime) {
               alertError('Error','Theme, Date, and Time are required fields!');
@@ -102,6 +122,12 @@ window.addEventListener('DOMContentLoaded', function(){
         formData.append('event_time', formattedTime);
         formData.append('event_venue', eventVenue);
         formData.append('prayer', prayer);
+        if (flyerInput.files.length > 0) {
+            formData.append('flyer', flyerInput.files[0]);
+        }
+        if (removeFlyerInput && removeFlyerInput.checked) {
+            formData.append('remove_flyer', 'on');
+        }
 
 
         fetch(this.action, {
