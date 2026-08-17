@@ -48,10 +48,13 @@ function confirmDelete(titleContent){
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
         customClass: {
             title: 'my-swal-title',
             confirmButton: 'my-swal-confirm-btn',
-            cancelButton: 'swal2-styled.swal2-cancel'
+            cancelButton: 'my-swal-cancel-btn',
+            actions: 'my-swal-actions'
         }
     })
     .then(result => result.isConfirmed);// Returns true if "Yes" is clicked, false otherwise

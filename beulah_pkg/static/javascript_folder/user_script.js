@@ -26,6 +26,25 @@ function alertError(titleContent, textContent){
     });
 }
 
+function confirmDelete(titleContent){
+    return Swal.fire({
+        title: titleContent,
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
+        customClass: {
+            title: 'my-swal-title',
+            confirmButton: 'my-swal-confirm-btn',
+            cancelButton: 'my-swal-cancel-btn',
+            actions: 'my-swal-actions'
+        }
+    })
+    .then(result => result.isConfirmed);// Returns true if "Yes" is clicked, false otherwise
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     let preloader = document.getElementById("preloader");
     preloader.style.transition = "opacity 0.5s ease-out";

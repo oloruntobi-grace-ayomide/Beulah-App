@@ -20,10 +20,7 @@ env/
 *.log
 
 # Instance folder (contains temporary files, local configurations)
-instance/
-
-# Sensitive configuration file (if it contains secrets)
-config.py
+# instance/
 
 # Migrations folder (Only ignore if you don’t want to track them)
 migrations

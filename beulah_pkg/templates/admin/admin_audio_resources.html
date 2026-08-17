@@ -5,13 +5,20 @@
 
 {% block content %}
 
-    
+    <div class="admin-table-actions">
+        <a href="{{url_for('add_audio_resource')}}" class="link-1"><i class="fa-solid fa-plus"></i> Add New Audio</a>
+    </div>
+
+    <div class="admin-table-card">
+        <div class="admin-table-card-header">
+            <div>
+                <h2 class="admin-table-card-title">Audio Resources</h2>
+                <p class="admin-table-card-description">Manage audio resources, comments, upload dates, and playback actions.</p>
+            </div>
+        </div>
+
     <div class="row filter-parent-container">
         <div class="col-12 filter-container" >
-
-            <div class="add-resource-div">
-                <a href="{{url_for('add_audio_resource')}}" class="link-1">Add New Audio</a>
-            </div>
 
             <div class="filter-section">
 
@@ -64,56 +71,6 @@
                 </form>
             </div>
 
-            <div class="pagination-container">
-
-                <!-- Pagination Controls -->
-                
-                <nav aria-label="...">
-                    <ul class="pagination">
-                    {% if pagination%}
-                    {% if pagination.has_prev %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ base_url }}?page={{ pagination.prev_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}&title={{ request.args.get('title', '') }}"><i class="fa-solid fa-angle-left"></i></a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link"><i class="fa-solid fa-angle-left"></i></span>
-                        </li>
-                    {% endif %}
-                    {%endif%}
-
-                    
-
-                    {% if pagination %}
-                        {% for page_num in pagination.iter_pages(left_edge=0, right_edge=0, left_current=0, right_current=0) %}
-                        
-                        {% if page_num %}
-                            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
-                                <a class="page-link" href="{{ base_url }}?page={{ page_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}&title={{ request.args.get('title', '') }}">{{ page_num }}</a>
-                            </li>
-                        {% endif %}
-
-                        {% endfor %}
-                    {% endif%}
-
-
-
-                    {% if pagination %}
-                    {% if pagination.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ base_url }}?page={{ pagination.next_num }}&sortOrder={{ request.args.get('sortOrder', 'desc') }}&month={{ request.args.get('month', 'all') }}&title={{ request.args.get('title', '') }}"><i class="fa-solid fa-angle-right"></i></a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link"><i class="fa-solid fa-angle-right"></i></span>
-                        </li>
-                    {% endif %}
-                    {% endif %}
-                    </ul>
-                </nav>
-
-            </div>
-
         </div>
 
     </div>
@@ -151,7 +108,7 @@
                         <h5>Play</h5>
                     </th>
 
-                    <th>
+                    <th class="sticky-action">
                         <h5>Delete</h5>
                     </th>
 
@@ -193,10 +150,10 @@
                             </td>
 
                             <td class="view-action">
-                                <p class="pointer"><a href="{{url_for('dynamic_audios', id=resource.resource_id)}}"><i class="fa-regular fa-eye"></i>Play</a></p>
+                                <p class="pointer"><a href="{{url_for('dynamic_audios', id=resource.resource_id)}}"><i class="fa-solid fa-play"></i> Play</a></p>
                             </td>
 
-                            <td class="action">
+                            <td class="action sticky-action">
                                 <p class="pointer delete-resource-btn" data-id="{{resource.resource_id}}"><i class="fa-regular fa-trash-can"></i></p>
                             </td>
                             </tr>
@@ -211,6 +168,10 @@
             </table>
 
         </div>
+    </div>
+    {% set pagination_label = 'audio resources' %}
+    {% set pagination_query = 'sortOrder=' ~ request.args.get('sortOrder', 'desc') ~ '&month=' ~ request.args.get('month', 'all') ~ '&title=' ~ request.args.get('title', '') %}
+    {% include 'admin/_pagination_footer.html' %}
     </div>
 {% endblock content %}
 

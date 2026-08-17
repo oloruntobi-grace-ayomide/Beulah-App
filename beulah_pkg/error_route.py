@@ -3,6 +3,7 @@ from flask_wtf.csrf import CSRFError
 from werkzeug.exceptions import TooManyRequests
 from sqlalchemy.exc import InterfaceError
 from beulah_pkg import app
+import traceback
 # import logging
 
 
@@ -73,7 +74,7 @@ def error408(e):
 @app.errorhandler(500)
 def error500(e):
     # app.logger.error(f"Server Error: {e}")
-    # print(e)
+    print(e)
     return render_template('error/error500.html'), 500
 
 
@@ -82,7 +83,7 @@ def error500(e):
 @app.errorhandler(Exception)
 def handle_exception(e):
     # This will catch any unhandled exceptions and trigger your custom 500 page
-    # print(e)
+    traceback.print_exc()
     return render_template('error/error500.html'), 500
 
 
@@ -92,5 +93,5 @@ def handle_exception(e):
 @app.errorhandler(InterfaceError)
 def handle_interface_error(e):
     # app.logger.error(f"Database connection error: {e}")
-    # print(e)
+    print(e)
     return render_template("error/dberror.html"), 500

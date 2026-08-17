@@ -76,6 +76,7 @@
                         <input type="text" placeholder="Please Enter Your Name" name="name" id="commenter" required>
                         <textarea placeholder="Comment" id="comment-box" name="comment" required></textarea>
                         <input type="hidden" id="comment-id" value="">
+                       
                         <div class="formatting">
                             <button type="button" class="emoji-btn" data-emoji="👍">👍</button>
                             <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
@@ -84,6 +85,15 @@
                             <button type="submit" class="send" title="Send">
                                 <i class="fa-solid fa-arrow-up"></i>
                             </button>
+                        </div>
+
+                        <div class="input-style-1">
+                            <div id="turnstileComment"  class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+                        </div>
+ 
+                        <div class="hp-field" aria-hidden="true">
+                            <label for="commentWebsite">Leave this field empty</label>
+                            <input type="text" name="website" id="commentWebsite" tabindex="-1" autocomplete="off">
                         </div>
                     </form>
                 </div>
@@ -264,6 +274,9 @@
         formData.append('comment', comment);
 
         if (currentMode === 'add'){
+            formData.append('website', document.getElementById('commentWebsite').value);
+            formData.append('turnstile_token', turnstile.getResponse(document.getElementById('turnstileComment')));
+            
             
             fetch(`/add-comment/${id}/`, {
             method : 'POST',
@@ -275,16 +288,17 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alertSuccess('Comment Added',data.message);
+                    alertSuccess('Comment Added', data.message);
                     location.reload()
-                    
                 } else {
                     alertError('Error ', data.message);
+                    turnstile.reset(document.getElementById('turnstileComment'));
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
                 alertError('Oops', 'An unexpected error occurred. Please try again.');
+                turnstile.reset(document.getElementById('turnstileComment'));
             });
             
         }else if(currentMode === 'edit'){

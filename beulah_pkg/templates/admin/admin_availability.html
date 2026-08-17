@@ -1,0 +1,286 @@
+{% extends "admin/admin_template.html" %}
+
+{% block title %}Availability - Beulah Foundation for Christ{% endblock %}
+
+{% block content %}
+<div class="card-style mb-3">
+  <h5 class="mb-3">Working Hours <span class="text-muted small">(WAT, UTC+1)</span></h5>
+  {% for day in working_hours %}
+  <div class="d-flex align-items-center gap-3 p-2 border-bottom wh-row" data-day="{{ day.day_of_week }}">
+    <div class="form-check form-switch mb-0">
+      <input class="form-check-input wh-active" type="checkbox" {{ 'checked' if day.is_active else '' }}>
+    </div>
+    <span style="width:100px;">{{ day.day_name }}</span>
+    <input type="time" class="form-control form-control-sm wh-start" style="max-width:120px;" value="{{ day.start_time }}">
+    <span class="text-muted small">to</span>
+    <input type="time" class="form-control form-control-sm wh-end" style="max-width:120px;" value="{{ day.end_time }}">
+    <button type="button" class="btn btn-sm wh-save-btn" style="background:#6D0F15;color:#fff;">Save</button>
+  </div>
+  {% endfor %}
+  <p class="text-muted small mt-3 mb-0">
+    Sessions are 60 minutes, generated automatically from these hours at 60-minute intervals.
+  </p>
+</div>
+
+<div class="card-style mb-3">
+  <h5 class="mb-3">Recurring Weekly Blocks</h5>
+  <p class="text-muted small">
+    Use this for time slots you're regularly unavailable - e.g. every Wednesday 5 - 6pm.
+  </p>
+
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <select id="newRecurDay" class="form-select form-select-sm" style="max-width:140px;">
+      {% for name in day_names %}
+      <option value="{{ loop.index0 }}">{{ name }}</option>
+      {% endfor %}
+    </select>
+    <input type="time" id="newRecurStart" class="form-control form-control-sm" style="max-width:120px;">
+    <span class="align-self-center text-muted small">to</span>
+    <input type="time" id="newRecurEnd" class="form-control form-control-sm" style="max-width:120px;">
+    <input type="text" id="newRecurReason" class="form-control form-control-sm" placeholder="Reason (optional)" style="max-width:180px;">
+    <button type="button" id="addRecurBlockBtn" class="btn btn-sm" style="background:#6D0F15;color:#fff;white-space:nowrap;">Add</button>
+  </div>
+
+  <div id="recurBlocksError" class="alert alert-danger py-2 small" style="display:none;"></div>
+
+  <div id="recurBlocksList">
+    {% if recurring_blocks|length == 0 %}
+    <p class="text-muted small text-center py-3" id="noRecurBlocks">No recurring blocks set.</p>
+    {% endif %}
+    {% for rb in recurring_blocks %}
+    <div class="d-flex justify-content-between align-items-center p-2 mb-1 rounded recur-block-row" data-id="{{ rb.id }}" style="background:#fdecea;">
+      <div>
+        <strong class="small">{{ rb.day_name }}, {{ rb.start_time }} &ndash; {{ rb.end_time }}</strong>
+        {% if rb.reason %}<br><span class="text-muted small">{{ rb.reason }}</span>{% endif %}
+      </div>
+      <button type="button" class="cancel-block-btn remove-recur-btn" data-id="{{ rb.id }}"><i class="fa-solid fa-xmark text-danger"></i></button>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+<div class="card-style">
+  <h5 class="mb-3">Blocked Dates</h5>
+  <p class="text-muted small">
+    Use this for dates slots that you're unavailable.
+  </p>
+  <div class="d-flex gap-2 mb-3">
+    <input type="date" id="newBlockDate" class="form-control form-control-sm">
+    <input type="text" id="newBlockReason" class="form-control form-control-sm" placeholder="Reason (optional)">
+    <button type="button" id="addBlockBtn" class="btn btn-sm" style="background:#6D0F15;color:#fff;white-space:nowrap;">Block</button>
+  </div>
+  <div id="blockedDatesError" class="alert alert-danger py-2 small" style="display:none;"></div>
+  <div id="blockedDatesList">
+    {% if blocked_dates|length == 0 %}
+    <p class="text-muted small text-center py-3" id="noBlockedDates">No blocked dates.</p>
+    {% endif %}
+    {% for bd in blocked_dates %}
+    <div class="d-flex justify-content-between align-items-center p-2 mb-1 rounded blocked-date-row" data-id="{{ bd.bd_id }}" style="background:#fdecea;">
+      <div>
+        <strong class="small">{{ bd.bd_date.strftime('%A, %B %d, %Y') }}</strong>
+        {% if bd.bd_reason %}<br><span class="text-muted small">{{ bd.bd_reason }}</span>{% endif %}
+      </div>
+      <button type="button" class="cancel-block-btn remove-block-btn" data-id="{{ bd.bd_id }}"><i class="fa-solid fa-xmark text-danger"></i></button>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+  function postJSON(url, body) {
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+      body: JSON.stringify(body)
+    }).then(r => r.json().then(data => ({ ok: r.ok, data })));
+  }
+
+  // ── Working hours ────────────────────────────────────────────────────
+  document.querySelectorAll('.wh-save-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const row = this.closest('.wh-row');
+      const day = row.dataset.day;
+      const isActive = row.querySelector('.wh-active').checked;
+      const startTime = row.querySelector('.wh-start').value;
+      const endTime = row.querySelector('.wh-end').value;
+
+      btn.textContent = 'Saving…';
+      postJSON("{{ url_for('admin_update_working_hours') }}", {
+        day_of_week: parseInt(day, 10),
+        start_time: startTime,
+        end_time: endTime,
+        is_active: isActive
+      }).then(({ ok, data }) => {
+        btn.textContent = (ok && data.success) ? 'Saved ✓' : 'Save';
+        setTimeout(() => { btn.textContent = 'Save'; }, 1500);
+      });
+    });
+  });
+
+  // ── Blocked dates ─────────────────────────────────────────────────────
+  const blockedList = document.getElementById('blockedDatesList');
+  const blockedError = document.getElementById('blockedDatesError');
+
+  function removeBlock() {
+      const id = this.dataset.id;
+      const row = this.closest('.blocked-date-row');
+  
+      confirmDelete('Remove this blocked date? Clients will be able to book it again.')
+        .then(confirmed => {
+          if (!confirmed) return;
+  
+          postJSON("{{ url_for('admin_delete_blocked_date') }}", { id: parseInt(id, 10) }).then(({ ok, data }) => {
+            if (ok && data.success) {
+              alertSuccess2('Removed', data.message || 'Blocked date removed.');
+              row.remove();
+            } else {
+              alertError('Error', data.message || 'Could not remove that blocked date.');
+            }
+          });
+        });
+    }
+ 
+  document.querySelectorAll('.remove-block-btn').forEach(function (btn) {
+    btn.addEventListener('click', removeBlock);
+  });
+
+  document.getElementById('addBlockBtn').addEventListener('click', function () {
+    const date = document.getElementById('newBlockDate').value;
+    const reason = document.getElementById('newBlockReason').value.trim();
+    blockedError.style.display = 'none';
+ 
+    if (!date) {
+      blockedError.textContent = 'Please choose a date.';
+      blockedError.style.display = 'block';
+      return;
+    }
+ 
+    postJSON("{{ url_for('admin_add_blocked_date') }}", { date: date, reason: reason }).then(({ ok, data }) => {
+      if (!ok || !data.success) {
+        blockedError.textContent = data.message || 'Could not block that date.';
+        blockedError.style.display = 'block';
+        return;
+      }
+ 
+      const noneMsg = document.getElementById('noBlockedDates');
+      if (noneMsg) noneMsg.remove();
+ 
+      const row = document.createElement('div');
+      row.className = 'd-flex justify-content-between align-items-center p-2 mb-1 rounded blocked-date-row';
+      row.style.background = '#fdecea';
+      row.dataset.id = data.blocked_date.id;
+      row.innerHTML =
+        '<div><strong class="small">' + data.blocked_date.date + '</strong>' +
+        (data.blocked_date.reason ? '<br><span class="text-muted small">' + data.blocked_date.reason + '</span>' : '') +
+        '</div><button type="button" class="cancel-block-btn remove-block-btn" data-id="' + data.blocked_date.id + '"><i class="fa-solid fa-xmark text-danger"></i></button>';
+      blockedList.appendChild(row);
+      row.querySelector('.remove-block-btn').addEventListener('click', removeBlock);
+ 
+      document.getElementById('newBlockDate').value = '';
+      document.getElementById('newBlockReason').value = '';
+ 
+      if (data.conflicts && data.conflicts.length > 0) {
+        const names = data.conflicts.map(c => c.name + ' (' + c.time + ', ' + c.status + ')').join(', ');
+        alertError(
+          'Heads up',
+          'This date is blocked, but ' + data.conflicts.length + ' existing booking(s) already fall on it: ' +
+          names + '. They were NOT cancelled automatically - check the Appointments page to reschedule or cancel them yourself.'
+        );
+      } else {
+        alertSuccess2('Blocked', 'Date blocked successfully.');
+      }
+    });
+  });
+ 
+  
+  // ── Recurring weekly blocks ────────────────────────────────────────
+  const recurList = document.getElementById('recurBlocksList');
+  const recurError = document.getElementById('recurBlocksError');
+  const dayNames = {{ day_names | tojson }};
+
+  function removeRecurBlock() {
+    const id = this.dataset.id;
+    const row = this.closest('.recur-block-row');
+    confirmDelete('Remove this recurring block? Those times will become bookable again.')
+      .then(confirmed => {
+        if (!confirmed) return;
+ 
+        postJSON("{{ url_for('admin_delete_recurring_block') }}", { id: parseInt(id, 10) }).then(({ ok, data }) => {
+          if (ok && data.success) {
+            alertSuccess2('Removed', data.message || 'Recurring block removed.');
+            row.remove();
+          } else {
+            alertError('Error', data.message || 'Could not remove that block.');
+          }
+        });
+      });
+  }
+
+  document.querySelectorAll('.remove-recur-btn').forEach(function (btn) {
+    btn.addEventListener('click', removeRecurBlock);
+  });
+
+  document.getElementById('addRecurBlockBtn').addEventListener('click', function () {
+    const dayOfWeek = document.getElementById('newRecurDay').value;
+    const startTime = document.getElementById('newRecurStart').value;
+    const endTime = document.getElementById('newRecurEnd').value;
+    const reason = document.getElementById('newRecurReason').value.trim();
+    recurError.style.display = 'none';
+ 
+    if (!startTime || !endTime) {
+      recurError.textContent = 'Please choose a start and end time.';
+      recurError.style.display = 'block';
+      return;
+    }
+ 
+    postJSON("{{ url_for('admin_add_recurring_block') }}", {
+      day_of_week: parseInt(dayOfWeek, 10),
+      start_time: startTime,
+      end_time: endTime,
+      reason: reason
+    }).then(({ ok, data }) => {
+      if (!ok || !data.success) {
+        recurError.textContent = data.message || 'Could not add that block.';
+        recurError.style.display = 'block';
+        return;
+      }
+ 
+      const noneMsg = document.getElementById('noRecurBlocks');
+      if (noneMsg) noneMsg.remove();
+ 
+      const row = document.createElement('div');
+      row.className = 'd-flex justify-content-between align-items-center p-2 mb-1 rounded recur-block-row';
+      row.style.background = '#fdecea';
+      row.dataset.id = data.block.id;
+      row.innerHTML =
+        '<div><strong class="small">' + dayNames[data.block.day_of_week] + ', ' + data.block.start_time + ' \u2013 ' + data.block.end_time + '</strong>' +
+        (data.block.reason ? '<br><span class="text-muted small">' + data.block.reason + '</span>' : '') +
+        '</div><button type="button" class="cancel-block-btn remove-recur-btn" data-id="' + data.block.id + '"><i class="fa-solid fa-xmark text-danger"></i></button>';
+      recurList.appendChild(row);
+      row.querySelector('.remove-recur-btn').addEventListener('click', removeRecurBlock);
+ 
+      document.getElementById('newRecurStart').value = '';
+      document.getElementById('newRecurEnd').value = '';
+      document.getElementById('newRecurReason').value = '';
+ 
+      if (data.conflicts && data.conflicts.length > 0) {
+        const names = data.conflicts.map(c => c.name + ' (' + c.date + ' ' + c.time + ', ' + c.status + ')').join(', ');
+        alertError(
+          'Heads up',
+          'This recurring block is set, but ' + data.conflicts.length + ' upcoming booking(s) already fall inside it: ' +
+          names + '. They were NOT cancelled automatically — check the Appointments page to reschedule or cancel them yourself.'
+        );
+      } else {
+        alertSuccess2('Added', 'Recurring block added successfully.');
+      }
+    });
+  });
+});
+</script>
+{% endblock script %}

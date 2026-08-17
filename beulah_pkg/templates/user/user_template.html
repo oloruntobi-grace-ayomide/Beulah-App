@@ -71,6 +71,9 @@
 
     <!-- Stylesheets links ends here -->
 
+    <!-- this is for turnstile from cloufare captcha service -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
 
    
    
@@ -88,6 +91,41 @@
     </div>
 
     <div class="container-fluid content-container" id="content-container">
+
+        {% if request.endpoint not in ['book_session', 'privacy_cookie_notice'] %}
+        <div class="counselling-prompt-modal" id="counselling-prompt-modal" aria-hidden="true">
+            <div class="counselling-prompt-dialog" data-aos="fade-up" data-aos-duration="5000" role="dialog" aria-modal="true" aria-labelledby="counselling-prompt-title">
+                <button type="button" class="counselling-prompt-close" id="counselling-prompt-close" aria-label="Close counselling prompt">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+                <div class="counselling-prompt-icon">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+
+                <div class="counselling-prompt-content">
+                    <h2 id="counselling-prompt-title">Need someone to talk with?</h2>
+                    <p>If you are interested in counselling, you can book a free session directly on our site.</p>
+                </div>
+
+                <a href="{{url_for('book_session')}}" class="counselling-prompt-link" id="counselling-prompt-link">Book Free Counselling</a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="cookie-notice" id="cookie-notice" aria-hidden="true">
+            <div class="cookie-notice-content">
+                <p>
+                    We use necessary cookies and similar technologies to keep this website secure,
+                    remember basic preferences, and improve your experience. By using this site,
+                    you agree to our Privacy &amp; Cookie Notice.
+                </p>
+                <div class="cookie-notice-actions">
+                    <button type="button" class="cookie-notice-accept" id="cookie-notice-accept">Accept</button>
+                    <a href="{{url_for('privacy_cookie_notice')}}" class="cookie-notice-learn">Learn more</a>
+                </div>
+            </div>
+        </div>
       
         {% block content %}
 
@@ -122,8 +160,6 @@
                             <hr>
                             <p><span><i class="fa-solid fa-envelope"></i></span> <a href="mailto: beufound@gmail.com"> beufound@gmail.com</a></p>
                             <hr>
-                            <p><span><i class="fa-solid fa-envelope"></i></span> <a href="mailto:efeyomi@gmail.com">efeyomi@gmail.com</a></p>
-                            <hr>
                             <p><span><i class="fa-solid fa-phone"></i></span> <a href="tel:+2348023071460">+234 8023071460</a></p>
                             <hr>
                             
@@ -156,7 +192,7 @@
                 <div class="row copyright">
 
                     <div class="col-12 col-md-8">
-                        <p id="copyright">Copyright <span id="year"></span> Beulah Foundation for Christ.</p>
+                        <p id="copyright"> &copy; Copyright <span id="year"></span> Beulah Foundation for Christ.</p>
                     </div>
                     
 
@@ -181,6 +217,81 @@
     <script defer src="{{url_for('static',filename='assets/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{url_for('static', filename='javascript_folder/user_script.min.js')}}"></script>
     <script defer src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const year = document.getElementById("year");
+            year.textContent = new Date().getFullYear();
+
+            const counsellingPrompt = document.getElementById('counselling-prompt-modal');
+            const closeCounsellingPrompt = document.getElementById('counselling-prompt-close');
+            const counsellingPromptLink = document.getElementById('counselling-prompt-link');
+            const promptStorageKey = 'beulahCounsellingPromptSeenDate';
+            const todayKey = new Date().toISOString().slice(0, 10);
+            const cookieNotice = document.getElementById('cookie-notice');
+            const cookieNoticeAccept = document.getElementById('cookie-notice-accept');
+            const cookieNoticeStorageKey = 'beulahCookieNoticeAccepted';
+            let counsellingPromptWasShown = false;
+
+            function showCookieNotice() {
+                if (cookieNotice && !localStorage.getItem(cookieNoticeStorageKey)) {
+                    cookieNotice.classList.add('show');
+                    cookieNotice.setAttribute('aria-hidden', 'false');
+                }
+            }
+
+            if (counsellingPrompt && localStorage.getItem(promptStorageKey) !== todayKey) {
+                setTimeout(function () {
+                    counsellingPromptWasShown = true;
+                    counsellingPrompt.classList.add('show');
+                    counsellingPrompt.setAttribute('aria-hidden', 'false');
+                }, 4000);
+            } else {
+                setTimeout(showCookieNotice, 1500);
+            }
+
+            function dismissCounsellingPrompt() {
+                if (!counsellingPrompt) {
+                    return;
+                }
+                localStorage.setItem(promptStorageKey, todayKey);
+                counsellingPrompt.classList.remove('show');
+                counsellingPrompt.setAttribute('aria-hidden', 'true');
+                setTimeout(showCookieNotice, 500);
+            }
+
+            if (closeCounsellingPrompt) {
+                closeCounsellingPrompt.addEventListener('click', dismissCounsellingPrompt);
+            }
+
+            if (counsellingPromptLink) {
+                counsellingPromptLink.addEventListener('click', function () {
+                    localStorage.setItem(promptStorageKey, todayKey);
+                });
+            }
+
+            if (counsellingPrompt) {
+                counsellingPrompt.addEventListener('click', function (event) {
+                    if (event.target === counsellingPrompt) {
+                        dismissCounsellingPrompt();
+                    }
+                });
+            }
+
+            if (cookieNoticeAccept) {
+                cookieNoticeAccept.addEventListener('click', function () {
+                    localStorage.setItem(cookieNoticeStorageKey, 'true');
+                    cookieNotice.classList.remove('show');
+                    cookieNotice.setAttribute('aria-hidden', 'true');
+                });
+            }
+
+            setTimeout(function () {
+                if (!counsellingPromptWasShown) {
+                    showCookieNotice();
+                }
+            }, 5500);
+        });
+    </script>
 
     {% block script %}{% endblock script %}
     <!-- Javascripts/jQuery ends here -->

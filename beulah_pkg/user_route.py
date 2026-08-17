@@ -6,10 +6,9 @@ from sqlalchemy import func, or_
 from bleach.sanitizer import Cleaner
 from flask_mail import Message
 from markupsafe import escape
-from beulah_pkg import app, mail
+from beulah_pkg import app, mail, limiter
+from beulah_pkg.spam_defense import is_honeypot_triggered, verify_turnstile
 from beulah_pkg.models import db, NewsletterSubscriber, Resource, PrayerRequest, Notification, Comment, Event, Slide
-
-
 
 
 
@@ -20,38 +19,26 @@ text_cleaner = Cleaner(
 )
 
 
+# @app.after_request
+# def after_request(response):
+#     response.headers['Cache-Control']='no-cache, no-store, must-revalidate'
+#     return response 
+
 @app.before_request
 def ensure_user_token():
-    # Check if the user_token cookie is present
     user_token = request.cookies.get('user_token')
     if not user_token:
         user_token = str(uuid.uuid4())
-        # Store the token globally for use in the current request
-        g.user_token = user_token
-
-        # Set the token as a cookie in the response
-        response = make_response()  # Create an empty response
-        response.set_cookie(
-            'user_token',
-            user_token,
-            httponly=True,
-            secure=True,
-            samesite='Strict',
-        )
-        return response
-
-    # Store the existing token in the global `g` object for this request
-    g.user_token = user_token
-
+        g.new_user_token = user_token
+    g.user_token = user_token or g.new_user_token
 
 
 @app.after_request
 def after_request(response):
-    response.headers['Cache-Control']='no-cache, no-store, must-revalidate'
-    return response 
-
-
-
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    if hasattr(g, 'new_user_token'):
+        response.set_cookie('user_token', g.new_user_token, httponly=True, secure=True, samesite='Strict')
+    return response
 
 def format_date_with_suffix(date):
     day = date.day
@@ -61,8 +48,6 @@ def format_date_with_suffix(date):
         suffix = {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
 
     return date.strftime(f"%A, %B {day}{suffix}").lstrip("0")
-
-
 
 
 def format_event_date(event_date):
@@ -78,21 +63,16 @@ def format_event_date(event_date):
     return formatted_date
 
 
-
-
 @app.route('/')
 def home():
     slides = db.session.query(Resource, Slide).join(Slide).filter(Resource.resource_type == 'slide', Resource.resource_is_deleted == False).all()
     return render_template('user/index.html', slides=slides)
 
 
-
-
 @app.route('/beulah/')
 def user_home():
     slides = db.session.query(Resource, Slide).join(Slide).filter(Resource.resource_type == 'slide', Resource.resource_is_deleted == False).all()
     return render_template('user/index.html', slides=slides)
-
 
 
 @app.route('/search/', methods=['GET', 'POST'])
@@ -138,7 +118,6 @@ def search_results():
         audio_pagination=audio_pagination, reading_resources=reading_resources,audio_resources=audio_resources, base_url=base_url)
 
 
-
 @app.route('/about-us/')
 def about():
     return render_template('user/about.html')
@@ -149,10 +128,24 @@ def partnership():
     return render_template('user/partnership.html')
 
 
+@app.route('/privacy-cookie-notice/')
+def privacy_cookie_notice():
+    return render_template('user/privacy_cookie_notice.html')
+
+
 @app.route('/contact-us/', methods=['GET', 'POST'])
+@limiter.limit("5 per hour", methods=["POST"])
 def contact_us():
     if request.method == 'POST':
         try:
+
+            if is_honeypot_triggered(request.form):
+                # Pretend success — low-stakes form, no reason to tip a bot off
+                return jsonify({'success': True, 'message': 'Your message has been sent successfully!'}), 200
+ 
+            if not verify_turnstile(request.form.get('turnstile_token'), request.remote_addr):
+                return jsonify({'success': False, 'message': 'CAPTCHA verification failed. Please try again.'}), 403
+ 
             # Retrieve form data
             name = str(escape(request.form.get('name')))
             phone = str(escape(request.form.get('phone')))
@@ -211,9 +204,17 @@ def contact_us():
 
 
 @app.route('/prayer-request/', methods=['GET', 'POST'])
+@limiter.limit("5 per hour", methods=["POST"])
 def prayer_request():
     if request.method == 'POST':
         try:
+            if is_honeypot_triggered(request.form):
+                # Pretend success — low-stakes form, no reason to tip a bot off
+                return jsonify({'success': True, 'message': 'Prayer request submitted successfully'}), 200
+ 
+            if not verify_turnstile(request.form.get('turnstile_token'), request.remote_addr):
+                return jsonify({'success': False, 'message': 'CAPTCHA verification failed. Please try again.'}), 403
+            
             # Retrieve form data
             name = escape(request.form.get('name'))
             phone = escape(request.form.get('phone')) or None
@@ -259,7 +260,6 @@ def upcoming_event():
     for event in events:
         event.formatted_date = format_event_date(event.event_date)
     return render_template('user/upcoming_event.html', events=events)
-
 
 
 @app.route('/reading-resources/')
@@ -315,7 +315,6 @@ def audio_resources():
     return render_template('user/audio_resource.html', resources=resources ,base_url=base_url, pagination=pagination)
 
 
-
 @app.route('/dynamic_messages/<int:id>/')
 def dynamic_messages(id):
     user_token = g.get('user_token')
@@ -367,7 +366,6 @@ def dynamic_audios(id):
     return render_template('user/dynamic_audios.html', resource=resource, user_token=user_token, comments=comments)
 
 
-
 @app.route('/dynamic_slide/<int:id>/')
 def dynamic_slides(id):
     user_token = g.get('user_token')
@@ -394,32 +392,37 @@ def dynamic_slides(id):
     return render_template('user/dynamic_messages.html', resource=resource, user_token=user_token, comments=comments)
 
 
-
-
 @app.route('/add-comment/<int:id>/', methods=['POST'])
+@limiter.limit("5 per hour", methods=['POST'])
 def add_comment(id):
+    if is_honeypot_triggered(request.form):
+        return jsonify({'success': True, 'message': 'Comment submitted sucessfully.'}), 200
+ 
+    if not verify_turnstile(request.form.get('turnstile_token'), request.remote_addr):
+        return jsonify({'success': False, 'message': 'CAPTCHA verification failed. Please try again.'}), 403
+ 
     commenter_name = request.form.get('name')
-    comment_body = request.form.get('comment') 
+    comment_body = request.form.get('comment')
     resource = db.session.query(Resource).filter(Resource.resource_id == id).first()
-
+ 
     if not resource:
         return jsonify({'success': False, 'message': 'Reading Resource Not Found.'}), 400
-    
+ 
     if not comment_body or not commenter_name:
          return jsonify({'success': False, 'message': 'Missing required fields.'}), 400
-
+ 
     user_token = g.get('user_token')
     if not user_token:
         return jsonify({'success': False, 'message': 'Something Went wrong, Please try again later.'}), 400
-    
+ 
     try:
         sanitized_name = text_cleaner.clean(commenter_name)
         sanitized_content = text_cleaner.clean(comment_body)
-        new_comment=Comment(
+        new_comment = Comment(
             resource_id=resource.resource_id,
-            comment_token = user_token,
+            comment_token=user_token,
             comment_by=sanitized_name,
-            comment_body = sanitized_content
+            comment_body=sanitized_content
         )
         db.session.add(new_comment)
         db.session.commit()
@@ -427,10 +430,10 @@ def add_comment(id):
     except:
         db.session.rollback()
         return jsonify({'success': False, 'message': 'Something Went wrong, Please try again.'}), 400
-
-
+    
 
 @app.route('/edit_comment/<int:comment_id>/', methods=['POST'])
+@limiter.limit("5 per hour", methods=['POST'])
 def edit_comment(comment_id):
     comment = Comment.query.get(comment_id)
     if not comment:
@@ -460,10 +463,8 @@ def edit_comment(comment_id):
         return jsonify({'success': False, 'message': 'Unauthorized to edit this comment.'}), 403
 
 
-
-
-
 @app.route('/delete-comment/', methods=['POST'])
+@limiter.limit("10 per hour", methods=['POST'])
 def delete_comment():
     comment_id = request.json.get('id')
     comment = Comment.query.get(comment_id)
@@ -481,9 +482,8 @@ def delete_comment():
         return jsonify({'success': False, 'message': 'Unauthorized to delete this comment.'}), 403
 
 
-
-
 @app.route('/beulah/subscriber/email/', methods=['POST'])
+@limiter.limit("5 per hour", methods=['POST'])
 def subscribe():
     # Get the subscriber email from the request body (JSON)
     data = request.get_json()

@@ -41,6 +41,16 @@
         <textarea name="request" rows="8"  placeholder="Enter Your Prayer Request" required></textarea>
         </div>
 
+        <div class="input-style-1">
+            <div id="turnstilePrayer"  class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+        </div>
+ 
+        <div class="hp-field" aria-hidden="true">
+            <label for="prayerWebsite">Leave this field empty</label>
+            <input type="text" name="website" id="prayerWebsite" tabindex="-1" autocomplete="off">
+        </div>
+ 
+
         <button type="submit" class="btn button_submit">Submit Prayer Request</button>
       </form>
     </section>
@@ -93,6 +103,9 @@ form.addEventListener('submit', function (event) {
   formData.append('phone', phone)
   formData.append('email', email_address)
   formData.append('request', request)
+  formData.append('website', document.getElementById('prayerWebsite').value)
+  formData.append('turnstile_token', turnstile.getResponse(document.getElementById('turnstilePrayer')))
+ 
   
   fetch(this.action, {
     method: 'POST',
@@ -105,16 +118,18 @@ form.addEventListener('submit', function (event) {
   .then(data => {
     if (data.success) {
       alertSuccess('Form Submited', data.message);
-      form.reset(); 
+      form.reset();
+      turnstile.reset(document.getElementById('turnstilePrayer'));
     } else {
-      alertError('Oops...',data.message );
+      alertError('Oops...', data.message);
+      turnstile.reset(document.getElementById('turnstilePrayer'));
     }
     submitButton.disabled = false;
     submitButton.textContent = 'Submit';
   })
   .catch(error => {
-      console.error('Error:', error);
       alert('An unexpected error occurred. Please try again later.');
+      turnstile.reset(document.getElementById('turnstilePrayer'));
       submitButton.disabled = false;
       submitButton.textContent = 'Submit';
     });

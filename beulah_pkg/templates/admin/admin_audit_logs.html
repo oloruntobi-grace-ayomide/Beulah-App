@@ -1,0 +1,281 @@
+{% extends 'admin/admin_template.html '%}
+
+{% block title %}Audit Logs - Beulah Foundation for Christ{% endblock title %}
+
+
+{% block content %}
+
+    <div class="admin-table-card">
+        <div class="admin-table-card-header">
+            <div>
+                <h2 class="admin-table-card-title">Audit Logs</h2>
+                <p class="admin-table-card-description">Review administrative sign-ins, session activity, protected changes, and security events.</p>
+            </div>
+        </div>
+
+        <div class="row filter-parent-container">
+            <div class="col-12 filter-container">
+
+                <div class="filter-section">
+
+                    <div class="select-style-1">
+                        <div class="select-position">
+                            <select class="form-select months" name="month">
+                                <option value="all" {% if request.args.get('month', 'all') == 'all' %}selected{% endif %}>All Months</option>
+                                <option value="1" {% if request.args.get('month') == '1' %}selected{% endif %}>January</option>
+                                <option value="2" {% if request.args.get('month') == '2' %}selected{% endif %}>February</option>
+                                <option value="3" {% if request.args.get('month') == '3' %}selected{% endif %}>March</option>
+                                <option value="4" {% if request.args.get('month') == '4' %}selected{% endif %}>April</option>
+                                <option value="5" {% if request.args.get('month') == '5' %}selected{% endif %}>May</option>
+                                <option value="6" {% if request.args.get('month') == '6' %}selected{% endif %}>June</option>
+                                <option value="7" {% if request.args.get('month') == '7' %}selected{% endif %}>July</option>
+                                <option value="8" {% if request.args.get('month') == '8' %}selected{% endif %}>August</option>
+                                <option value="9" {% if request.args.get('month') == '9' %}selected{% endif %}>September</option>
+                                <option value="10" {% if request.args.get('month') == '10' %}selected{% endif %}>October</option>
+                                <option value="11" {% if request.args.get('month') == '11' %}selected{% endif %}>November</option>
+                                <option value="12" {% if request.args.get('month') == '12' %}selected{% endif %}>December</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="select-style-1">
+                        <div class="select-position">
+                            <select class="form-select sort-order" name="sortOrder">
+                                <option value="desc" {{ get_selected_option('desc') }}>Desc</option>
+                                <option value="asc" {{ get_selected_option('asc') }}>Asc</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="filter-audit-logs" class="butt-1">Filter</button>
+                </div>
+
+                <div class="search-filter-form">
+                    <form role="search" id="audit-logs-search-form">
+                        <input
+                            type="search"
+                            placeholder="Search by action..."
+                            name="action"
+                            aria-label="Search action"
+                            id="search-bar"
+                            value="{{ request.args.get('action', '') }}"
+                        >
+                        <input
+                            type="search"
+                            placeholder="Search admin..."
+                            name="admin"
+                            aria-label="Search admin"
+                            value="{{ request.args.get('admin', '') }}"
+                        >
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 table-wrapper">
+
+                <table class="table">
+
+                    <thead>
+                        <tr>
+                            <th class="loop-num">
+                                <h5>#</h5>
+                            </th>
+                            <th>
+                                <h5>Admin</h5>
+                            </th>
+                            <th>
+                                <h5>Action</h5>
+                            </th>
+                            <th>
+                                <h5>Details</h5>
+                            </th>
+                            <th>
+                                <h5>IP Address</h5>
+                            </th>
+                            <th>
+                                <h5>Date</h5>
+                            </th>
+                            <th class="sticky-action">
+                                <h5>View</h5>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% if audit_logs %}
+                            {% for audit_log, admin in audit_logs %}
+                                <tr id="audit-log-{{ audit_log.audit_id }}"
+                                    data-admin="{% if admin %}{{ admin.admin_username }}{% else %}System{% endif %}"
+                                    data-action="{{ audit_log.action }}"
+                                    data-details="{{ audit_log.details or '-' }}"
+                                    data-ip="{{ audit_log.ip_address or '-' }}"
+                                    data-date="{% if audit_log.created_at %}{{ audit_log.created_at.strftime('%d-%b-%Y %I:%M %p') }}{% else %}-{% endif %}"
+                                    data-user-agent="{{ audit_log.user_agent or '-' }}">
+                                    <td class="loop-num">
+                                        <p>{{ (pagination.page - 1) * pagination.per_page + loop.index }}</p>
+                                    </td>
+
+                                    <td class="min-width special-td">
+                                        <p>
+                                            {% if admin %}
+                                                {{ admin.admin_username }}
+                                            {% else %}
+                                                System
+                                            {% endif %}
+                                        </p>
+                                    </td>
+
+                                    <td class="min-width special-td">
+                                        <p>{{ audit_log.action }}</p>
+                                    </td>
+
+                                    <td class="min-width special-td">
+                                        <p>
+                                            {% if audit_log.details %}
+                                                {% if audit_log.details|length > 45 %}
+                                                    {{ audit_log.details[0:45] }}...
+                                                {% else %}
+                                                    {{ audit_log.details }}
+                                                {% endif %}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </p>
+                                    </td>
+
+                                    <td class="min-width special-td">
+                                        <p>{{ audit_log.ip_address or '-' }}</p>
+                                    </td>
+
+                                    <td class="min-width special-td">
+                                        <p>
+                                            {% if audit_log.created_at %}
+                                                {{ audit_log.created_at.strftime('%d-%b-%Y %I:%M %p') }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </p>
+                                    </td>
+
+                                    <td class="view-action sticky-action">
+                                        <p class="pointer view-audit-log-btn" data-id="{{ audit_log.audit_id }}"><i class="fa-regular fa-eye"></i> View</p>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center"><p>No Audit Logs Found</p></td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        {% set pagination_label = 'audit logs' %}
+        {% set pagination_query = 'sortOrder=' ~ request.args.get('sortOrder', 'desc') ~ '&month=' ~ request.args.get('month', 'all') ~ '&action=' ~ request.args.get('action', '') ~ '&admin=' ~ request.args.get('admin', '') %}
+        {% include 'admin/_pagination_footer.html' %}
+    </div>
+
+
+    <div class="row rendering-row" id="rendering-row">
+        <div class="col rendering-modal ">
+            <div class="card-style-2" tabindex="0">
+
+                <div class="card-content audit-log-modal-content">
+                    <h3 id="audit-action"></h3>
+                    <h5>Admin: <span id="audit-admin"></span></h5>
+                    <h5>Date: <span id="audit-date"></span></h5>
+                    <h5>IP Address: <span id="audit-ip"></span></h5>
+                    <p class="mt-4" id="audit-details"></p>
+                    <p class="mt-3" id="audit-user-agent"></p>
+                    <div class="mt-5">
+                        <button id="closing-button" class="butt-2">close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const baseUrl = "{{ base_url }}";
+    const filterButton = document.getElementById('filter-audit-logs');
+    const searchForm = document.getElementById('audit-logs-search-form');
+    const modalParent = document.getElementById('rendering-row');
+    const renderingModal = document.querySelector('.rendering-modal .card-style-2');
+    const closeBtn = document.getElementById('closing-button');
+
+    function buildAuditLogsUrl() {
+        const sortOrder = document.querySelector('select[name="sortOrder"]').value;
+        const month = document.querySelector('select[name="month"]').value;
+        const actionQuery = document.querySelector('input[name="action"]').value;
+        const adminQuery = document.querySelector('input[name="admin"]').value;
+        const params = new URLSearchParams({
+            page: '1',
+            sortOrder: sortOrder,
+            month: month,
+            action: actionQuery,
+            admin: adminQuery
+        });
+        return `${baseUrl}?${params.toString()}`;
+    }
+
+    filterButton.addEventListener('click', function () {
+        window.location.href = buildAuditLogsUrl();
+    });
+
+    searchForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        window.location.href = buildAuditLogsUrl();
+    });
+
+    document.querySelectorAll('.view-audit-log-btn').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.stopPropagation();
+            const auditLogId = this.dataset.id;
+            const row = document.getElementById(`audit-log-${auditLogId}`);
+            if (!row) {
+                return;
+            }
+
+            renderingModal.querySelector('#audit-action').textContent = row.dataset.action;
+            renderingModal.querySelector('#audit-admin').textContent = row.dataset.admin;
+            renderingModal.querySelector('#audit-date').textContent = row.dataset.date;
+            renderingModal.querySelector('#audit-ip').textContent = row.dataset.ip;
+            renderingModal.querySelector('#audit-details').textContent = row.dataset.details;
+            renderingModal.querySelector('#audit-user-agent').textContent = `User Agent: ${row.dataset.userAgent}`;
+
+            modalParent.classList.add('show');
+            renderingModal.focus();
+        });
+    });
+
+    closeBtn.addEventListener('click', function(event) {
+        event.stopPropagation();
+        modalParent.classList.remove('show');
+    });
+
+    modalParent.addEventListener('click', (event) => {
+        if (!renderingModal.contains(event.target)) {
+            modalParent.classList.remove('show');
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if(event.key === 'Escape' && modalParent.classList.contains('show')) {
+            modalParent.classList.remove('show');
+        }
+    });
+});
+</script>
+
+{% endblock script %}

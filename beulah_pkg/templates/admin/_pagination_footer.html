@@ -1,0 +1,48 @@
+{% if pagination %}
+<div class="table-pagination-footer">
+  <p class="table-pagination-total">
+    Total: {{ pagination.total or 0 }} {{ pagination_label|default('records') }}
+  </p>
+
+  {% if pagination.pages > 1 %}
+    {% set query_suffix = pagination_query|default('') %}
+    <div class="pagination-container">
+      <nav aria-label="Pagination">
+        <ul class="pagination">
+          {% if pagination.has_prev %}
+            <li class="page-item">
+              <a class="page-link" href="{{ base_url }}?page={{ pagination.prev_num }}{% if query_suffix %}&{{ query_suffix }}{% endif %}">
+                <i class="fa-solid fa-angle-left"></i>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link"><i class="fa-solid fa-angle-left"></i></span>
+            </li>
+          {% endif %}
+
+          {% for page_num in pagination.iter_pages(left_edge=0, right_edge=0, left_current=0, right_current=0) %}
+            {% if page_num %}
+              <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ base_url }}?page={{ page_num }}{% if query_suffix %}&{{ query_suffix }}{% endif %}">{{ page_num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if pagination.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="{{ base_url }}?page={{ pagination.next_num }}{% if query_suffix %}&{{ query_suffix }}{% endif %}">
+                <i class="fa-solid fa-angle-right"></i>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link"><i class="fa-solid fa-angle-right"></i></span>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  {% endif %}
+</div>
+{% endif %}
