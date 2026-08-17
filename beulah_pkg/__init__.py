@@ -2,7 +2,6 @@ import os
 import atexit
 from datetime import timedelta
 from flask import Flask
-from apscheduler.schedulers.background import BackgroundScheduler
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from dotenv import load_dotenv
@@ -16,54 +15,10 @@ csrf=CSRFProtect()
 migrate=Migrate()
 mail=Mail()
 limiter = Limiter(key_func=get_remote_address)
-event_cleanup_scheduler = None
 
 # Load environment variables from the .env file
 load_dotenv()
 
-
-def _should_start_scheduler(app):
-    if app.config.get('TESTING'):
-        return False
-    if (
-        os.getenv('ENABLE_EVENT_CLEANUP_SCHEDULER', 'true').lower() in ('0', 'false', 'no')
-        and os.getenv('ENABLE_ADMIN_LOG_CLEANUP_SCHEDULER', 'true').lower() in ('0', 'false', 'no')
-    ):
-        return False
-    if app.debug and os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
-        return False
-    return True
-
-
-def _start_event_cleanup_scheduler(app):
-    global event_cleanup_scheduler
-    if event_cleanup_scheduler or not _should_start_scheduler(app):
-        return
-
-    from beulah_pkg.admin_log_cleanup import delete_old_admin_logs
-    from beulah_pkg.event_cleanup import delete_expired_events
-
-    event_cleanup_scheduler = BackgroundScheduler(timezone='Africa/Lagos')
-    if os.getenv('ENABLE_EVENT_CLEANUP_SCHEDULER', 'true').lower() not in ('0', 'false', 'no'):
-        event_cleanup_scheduler.add_job(
-            func=lambda: delete_expired_events(app),
-            trigger='interval',
-            hours=1,
-            id='delete_expired_events',
-            replace_existing=True,
-            max_instances=1,
-        )
-    if os.getenv('ENABLE_ADMIN_LOG_CLEANUP_SCHEDULER', 'true').lower() not in ('0', 'false', 'no'):
-        event_cleanup_scheduler.add_job(
-            func=lambda: delete_old_admin_logs(app),
-            trigger='interval',
-            hours=24,
-            id='delete_old_admin_logs',
-            replace_existing=True,
-            max_instances=1,
-        )
-    event_cleanup_scheduler.start()
-    atexit.register(lambda: event_cleanup_scheduler.shutdown(wait=False))
 
 def create_app():
     app=Flask(__name__,instance_relative_config=True)
@@ -102,13 +57,13 @@ def create_app():
         app.config.update(
             TESTING=True,
             DEBUG=True,
-            SQLALCHEMY_DATABASE_URI='mysql+pymysql://root@127.0.0.1/beulahappdb'
+            SQLALCHEMY_DATABASE_URI=database_uri
         )
     else:
         # Override specific settings for development (optional)
         app.config.update(
             DEBUG=True,
-            SQLALCHEMY_DATABASE_URI='mysql+pymysql://root@127.0.0.1/beulahappdb'
+            SQLALCHEMY_DATABASE_URI=database_uri
         )
 
     app.config.setdefault('RATELIMIT_STORAGE_URI', os.getenv('RATELIMIT_STORAGE_URI', 'beulah-mysql://'))
@@ -125,8 +80,6 @@ def create_app():
 
     from beulah_pkg.admin_security import ensure_security_tables
     ensure_security_tables(app)
-
-    _start_event_cleanup_scheduler(app)
 
     return app
 

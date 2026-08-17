@@ -4,6 +4,14 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
+APP_URL=os.getenv('APP_URL')
+if APP_URL is None:
+    raise ValueError("No APP_URL set for Flask app!")
+
+ADMIN_EMAIL=os.getenv('ADMIN_EMAIL')
+if ADMIN_EMAIL is None:
+    raise ValueError("No ADMIN_EMAIL set for Flask app!")
+
 # Flask settings
 SECRET_KEY = os.getenv('SECRET_KEY')
 if SECRET_KEY is None:

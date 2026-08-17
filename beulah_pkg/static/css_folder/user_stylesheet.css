@@ -1287,6 +1287,29 @@ p.social-icons span i:hover{
     color: #E27C82; 
 }
 
+.account-details {
+	background-color: #e0e0e0;
+	padding:15px 20px;
+	border-radius:15px;
+	min-width:350px;
+	width:fit-content !important;
+	margin:15px 0 !important;
+}
+
+.account-details h3 {
+	font-size:22px;
+	font-weight:800;
+	color:#E27C82;
+}
+
+.account-details p {
+	margin-bottom:5px;
+}
+
+.account-details p span {
+	font-weight:900;
+}
+
 .partnership-role-title {
 	text-align: left !important;
 	font-weight: 500;
@@ -1900,6 +1923,7 @@ p.social-icons span i:hover{
  
 .upcoming-events-cards .card {
 	min-height: 200px;
+	min-width:300px;
 	height:500px;
 	perspective: 1000px;
 	text-align: center;
@@ -1962,6 +1986,10 @@ p.social-icons span i:hover{
 .card-front .event-caption {
 	padding: 12px 10px;
 	flex-shrink: 0;
+}
+
+.noe h3 {
+	font-size: 22px;
 }
  
 .card-front .event-caption h3 {
@@ -3191,6 +3219,10 @@ font-size:25px;
   gap:40px 10px;
 }
 
+.upcoming-page-content .card {
+	min-width:260px;
+}
+
 .card-front .event-caption h3 {
 	font-size:24px;
 }
@@ -3510,6 +3542,10 @@ p.social-icons{
   gap:40px 16px;
 }
 
+.upcoming-page-content .card {
+	min-width:350px;
+}
+
 .card-front .event-caption h3 {
 	font-size:28px;
 }
@@ -3547,12 +3583,21 @@ p.social-icons{
 	width:100%;
 }
 
+.partnership-page-content div ul {
+	padding-left:1rem;
+}
+
 .partnership-page-content div p, ul li{
 	font-size:15px;
 }
 
 .partnership-page-content div.responsibilities {
 	margin-top:20px;
+}
+
+.account-details {
+	padding:15px 15px;
+	min-width:100%;
 }
 
 .partnership-role-title {
@@ -3741,6 +3786,10 @@ p.not-found{
 .upcoming-page-content {
   grid-template-columns: repeat(auto-fill, 95%);
   gap:40px 16px;
+}
+
+.upcoming-page-content .card {
+	min-width:95%;
 }
 
 .card-front .event-caption h3 {
