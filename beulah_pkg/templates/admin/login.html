@@ -53,7 +53,7 @@
     <!-- Critical stylesheets -->
     <link rel="stylesheet" href="{{url_for('static', filename='assets/bootstrap/css/bootstrap.min.css')}}" crossorigin="anonymous">
     <link rel="stylesheet" href="{{url_for('static', filename='assets/fa/css/all.min.css')}}" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css_folder/admin_stylesheet.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css_folder/admin_stylesheet.min.css')}}">
 
     <!-- Non-critical stylesheets (loaded asynchronously) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" media="print" onload="this.media='all'">
@@ -63,7 +63,7 @@
     <noscript>
         <link rel="stylesheet" href="{{url_for('static', filename='assets/bootstrap/css/bootstrap.min.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='assets/fa/css/all.min.css')}}">
-        <link rel="stylesheet" href="{{url_for('static', filename='css_folder/admin_stylesheet.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css_folder/admin_stylesheet.min.css')}}">
     </noscript>
     
     {% block link %} {% endblock link %}
@@ -103,7 +103,7 @@
                         </span>
                     </div>
 
-                    <button type="submit" class="submit">
+                    <button type="submit" class="submit" id="login-submit-btn">
                          Log in
                     </button>
 
@@ -142,62 +142,80 @@
         });
 
         loginForm.addEventListener('submit', function(event){
-                event.preventDefault()
+            event.preventDefault();
 
-                const username = document.querySelector('input[name="username"]').value.trim()
-                const password = document.querySelector('input[name="password"]').value.trim()
+            const username = document.querySelector('input[name="username"]').value.trim();
+            const password = document.querySelector('input[name="password"]').value.trim();
 
-                if (!username || !password){
+            if (!username || !password){
+                Swal.fire({
+                    icon: "error",
+                    title: 'Oops...',
+                    text: 'The two fields cannot be empty',
+                    showConfirmButton: true,
+                    timer: 2000
+                });
+
+                return;
+            }
+
+            // Prevent multiple submissions
+            if (submitBtn.disabled) return;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML ='Logging in...';
+
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('password', password);
+
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                if (data.success) {
                     Swal.fire({
-                        icon: "error",
-                        title: 'Oops...',
-                        text:'The two fields cannot be empty',
-                        showConfirmButton: true,
-                        timer:2000
+                        icon: "success",
+                        text: data.message,
+                        showConfirmButton: false,
+                        timer: 1200
                     });
-                    return
+
+                    window.location.href = data.redirect_url;
+                    return;
                 }
-                
-                const formData = new FormData()
-                formData.append('username', username);
-                formData.append('password', password);
 
-                fetch(this.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': csrfToken
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data =>{
-                    if (data.success) {
-                        Swal.fire({
-                            icon: "success",
-                            text: data.message,
-                            showConfirmButton: true,
-                            timer:10000
-                        });
-                        window.location.href = data.redirect_url;
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title:'Error',
-                            text: data.message,
-                            showConfirmButton: true
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: "error",
-                        title:'Error',
-                        text: 'An unexpected error occurred. Please try again.',
-                        showConfirmButton: true
-                    });
+                // Login failed — allow another attempt
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Log in';
+
+                Swal.fire({
+                    icon: "error",
+                    title: 'Error',
+                    text: data.message,
+                    showConfirmButton: true
                 });
             })
+            .catch(error => {
+                console.error('Error:', error);
+
+                // Network/error — allow retry
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Log in';
+
+                Swal.fire({
+                    icon: "error",
+                    title: 'Error',
+                    text: 'An unexpected error occurred. Please try again.',
+                    showConfirmButton: true
+                });
+            });
+        });
 
         })
     </script>

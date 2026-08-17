@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" href="{{url_for('static', filename='images/favicon/favicon-96x96.png')}}" sizes="96x96" />
     <link rel="stylesheet" href="{{url_for('static', filename='assets/bootstrap/css/bootstrap.min.css')}}" crossorigin="anonymous">
     <link rel="stylesheet" href="{{url_for('static', filename='assets/fa/css/all.min.css')}}" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css_folder/admin_stylesheet.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css_folder/admin_stylesheet.min.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.min.css" media="print" onload="this.media='all'">
 </head>
 
@@ -34,7 +34,7 @@
                         <input type="text" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="Enter code" name="code" required>
                     </div>
 
-                    <button type="submit" class="submit">Verify</button>
+                    <button type="submit" class="submit" id="mfa-submit-btn">Verify</button>
                 </form>
             </div>
         </div>
@@ -46,34 +46,70 @@
         document.addEventListener('DOMContentLoaded', function(){
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const mfaForm = document.getElementById('mfa-form');
+            const submitBtn = document.getElementById('mfa-submit-btn');
 
             mfaForm.addEventListener('submit', function(event){
                 event.preventDefault();
+
                 const code = document.querySelector('input[name="code"]').value.trim();
+
                 if (!/^\d{6}$/.test(code)) {
-                    Swal.fire({ icon: 'error', title: 'Invalid code', text: 'Enter the 6-digit verification code.' });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid code',
+                        text: 'Enter the 6-digit verification code.'
+                    });
                     return;
                 }
+
+                // Prevent multiple submissions
+                if (submitBtn.disabled) return;
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML ='Verifying...';
 
                 const formData = new FormData();
                 formData.append('code', code);
 
                 fetch(this.action, {
                     method: 'POST',
-                    headers: { 'X-CSRFToken': csrfToken },
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
                     body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        Swal.fire({ icon: 'success', text: data.message, timer: 1200, showConfirmButton: false });
+                        Swal.fire({
+                            icon: 'success',
+                            text: data.message,
+                            timer: 1200,
+                            showConfirmButton: false
+                        });
+
                         window.location.href = data.redirect_url;
                         return;
                     }
-                    Swal.fire({ icon: 'error', title: 'Error', text: data.message });
+
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Verify';
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message
+                    });
                 })
                 .catch(() => {
-                    Swal.fire({ icon: 'error', title: 'Error', text: 'An unexpected error occurred. Please try again.' });
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Verify';
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An unexpected error occurred. Please try again.'
+                    });
                 });
             });
         });
